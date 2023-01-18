@@ -33,17 +33,7 @@ from add_func import generate_jwt_token, validate_jwt_token
 #     response = jsonify({"status":1,"message":"OK","data":data})
 #     return response
 
-@app.after_request
-def set_allow_origin(resp):
-    """ Set origin for GET, POST, PUT, DELETE requests """
 
-    h = resp.headers
-
-    # Allow crossdomain for other HTTP Verbs
-    if request.method != 'OPTIONS' and 'Origin' in request.headers:
-        h['Access-Control-Allow-Origin'] = request.headers['Origin']
-
-    return resp
 
 @app.before_request
 def before_request():
@@ -139,7 +129,6 @@ def post_news():
 @app.route("/get_news", methods=["GET"])
 @cross_origin()
 def get_news2():
-    # news = get_news_from_db()
-    # response = jsonify({"status": 1,"data":"da"})
-    # response.headers.add("Access-Control-Allow-Origin", "*")
-    return "ok"
+    news = get_news_from_db()
+    response = jsonify({"status": 1,"data":news})
+    return response
