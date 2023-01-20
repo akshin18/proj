@@ -48,3 +48,15 @@ def check_username(username):
 def get_news_from_db():
     data = list(db.news.find({},{"_id":0}))
     return data
+
+
+def get_user_data():
+    data = list(db.users.find({},{"_id":0,"updated_time":0}))
+    return data
+
+def delete_user(username):
+    try:
+        db.users.delete_one({"username":username})
+        return True
+    except:
+        return False

@@ -1,5 +1,5 @@
 from app import app
-import handlers
+from endpoint import users,news
 
 
 

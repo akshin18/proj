@@ -76,59 +76,6 @@ def before_request():
 #         return jsonify({"error": "Invalid JWT token"}), 401
 
 
-@app.route("/register",methods=["POST"])
-def register():
-    # data = request.json
-    data = request.get_json()
-
-    check_fields = check_register_entity(data)
-    if not check_fields:
-        response = jsonify({"status":0,"message":"Necessery field is not exists"}), 400
-        return response
-    create_user(data)
-    response = jsonify({"status":1,"message":"Successfully registered"}), 200
-    return response
-    
-
-@app.route("/login", methods=["POST"])
-def login():
-    print("Hello")
-    # Get the username and password from the request body
-    data = request.get_json()
-
-    username = data["username"]
-    pwd = data["password"]
-    
-    # Check if the username and password are correct
-    user = db.users.find_one({"username": username, "pwd": pwd},{"_id":0,"username":1,"position":1})
-    if user is not None:
-        # Generate a JWT token for the user
-        token = generate_jwt_token(user)
-        return jsonify({"token": token})
-    else:
-        # Return an error if the username or password is incorrect
-        return jsonify({"error": "Invalid username or password"}), 401
 
 
 
-@app.route("/post_news", methods=["POST"])
-def post_news():
-    # Get the username and password from the request body
-    data = request.get_json()
-
-    title = data.get("title",None)
-    text = data.get("text",None)
-    color = data.get("color",None)
-    hashtag = data.get("hashtag",None)
-    if add_news(title,text,color,hashtag):
-    
-        return jsonify({"status": 1}), 200
-    return jsonify({"status": 0,"message":"Wrong detailes"}), 400
-
-
-@app.route("/get_news", methods=["GET"])
-@cross_origin()
-def get_news2():
-    news = get_news_from_db()
-    response = jsonify({"status": 1,"data":news})
-    return response
