@@ -74,7 +74,7 @@ def check_register_entity(data: dict):
 def generate_jwt_token(user):
     # Define the claims
     claims = user
-
+    print(claims)
     # Generate the JWT token
     token = jwt.encode(claims, JWT_SECRET_KEY, algorithm="HS256")
     print(token)

@@ -60,3 +60,7 @@ def delete_user(username):
         return True
     except:
         return False
+
+def get_market_data():
+    data = list(db.market.find({},{"_id":0}))
+    return data

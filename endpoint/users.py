@@ -51,11 +51,11 @@ def login():
     pwd = data["password"]
     
     # Check if the username and password are correct
-    user = db.users.find_one({"username": username, "pwd": pwd},{"_id":0,"username":1,"position":1})
-    if user is not None:
+    data = db.users.find_one({"username": username, "pwd": pwd},{"_id":0,"username":1,"position":1})
+    if data is not None:
         # Generate a JWT token for the user
-        token = generate_jwt_token(user)
-        return jsonify({"token": token})
+        token = generate_jwt_token(data)
+        return jsonify({"token": token,"position":data["position"]})
     else:
         # Return an error if the username or password is incorrect
         return jsonify({"error": "Invalid username or password"}), 401
