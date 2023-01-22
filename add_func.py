@@ -77,8 +77,8 @@ def generate_jwt_token(user):
     print(claims)
     # Generate the JWT token
     token = jwt.encode(claims, JWT_SECRET_KEY, algorithm="HS256")
-    print(token)
-    return token
+    print(token.decode())
+    return token.decode()
 
 def validate_jwt_token(token):
     try:
