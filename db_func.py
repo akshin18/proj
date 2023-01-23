@@ -64,3 +64,8 @@ def delete_user(username):
 def get_market_data():
     data = list(db.market.find({},{"_id":0}))
     return data
+
+
+def delete_news_data(_id):
+    db.news.delete_one({"_id":ObjectId(f"{_id}")})
+    return True
