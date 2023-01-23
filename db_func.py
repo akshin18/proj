@@ -1,6 +1,6 @@
 from config import db
 from datetime import datetime
-
+from bson import ObjectId
 # db.test.insert_one({"test":"test"})
 # Mongo.db.users.insert_one({"name":"akshin","ok":"ol","as":1})
 
@@ -46,7 +46,7 @@ def check_username(username):
 
 
 def get_news_from_db():
-    data = list(db.news.find({},{"_id":0}))
+    data = list(db.news.find({},{}))
     return data
 
 

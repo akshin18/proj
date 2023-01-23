@@ -3,6 +3,8 @@ from flask import request,jsonify
 from add_func import check_register_entity
 from db_func import create_user, add_news, get_news_from_db
 from flask_cors import cross_origin
+from bson import json_util
+import json
 
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
@@ -32,7 +34,9 @@ def post_news():
 @cross_origin()
 def get_news2():
     news = get_news_from_db()
-    response = jsonify({"status": 1,"data":news})
+    json_data_with_backslashes = json_util.dumps(news)
+    json_data = json.loads(json_data_with_backslashes)
+    response = jsonify({"status": 1,"data":json_data})
     return response
 
 
