@@ -41,7 +41,7 @@ def get_news():
 
 
 
-@app.route("/detele_news",methods=["DELETE"])
+@app.route("/delete_news",methods=["DELETE"])
 def delete_news():
     data = request.get_json()
     _id = data.get("_id",None)
