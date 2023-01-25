@@ -1,5 +1,5 @@
 from app import app
-from endpoint import users,news,market
+from endpoint import users,news,market,test
 
 
 
