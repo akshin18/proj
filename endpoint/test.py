@@ -21,5 +21,5 @@ def test():
 
 @app.route("/test1",methods=["GET"])
 def test2():
-    response = jsonify({"status":"Good1"})
+    response = jsonify({"status":"Good2"})
     return response
