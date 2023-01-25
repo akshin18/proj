@@ -11,3 +11,6 @@ PARS_DIR = "pars_account"
 REGISTER_FIELDS = ["username", "first_name", "last_name", "middle_name",
                    "birth_date", "email", "phone", "address", "position", "pwd", "project"]
 PROJ_STATE = "DEBUG"
+
+
+PROFILE_UPDATE_DATA = ["username","pwd","birth_date","email","phone","address","first_name","last_name","middle_name"]

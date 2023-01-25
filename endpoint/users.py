@@ -1,11 +1,12 @@
-from app import app
+from datetime import datetime
+
 from flask import request,jsonify
-from add_func import check_register_entity
-from db_func import create_user, get_user_data
 from flask_cors import cross_origin
 
+from app import app
 from config import db, PROJ_STATE
-from add_func import generate_jwt_token, validate_jwt_token
+from add_func import generate_jwt_token, validate_jwt_token,check_register_entity
+from db_func import create_user, get_users_data,update_profile_info
 
 
 
@@ -47,11 +48,14 @@ def login():
     # Get the username and password from the request body
     data = request.get_json()
 
-    username = data["username"]
-    pwd = data["password"]
-    
+    username = data.get("username",None)
+    pwd = data.get("password",None)
+    if not username or not pwd:
+        return jsonify({"status":0,"message":"Wrong creditales"})
+
     # Check if the username and password are correct
     data = db.users.find_one({"username": username, "pwd": pwd},{"_id":0,"username":1,"position":1})
+    data["time"] = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
     if data is not None:
         # Generate a JWT token for the user
         token = generate_jwt_token(data)
@@ -63,6 +67,28 @@ def login():
 
 @app.route("/get_users",methods=["GET"])
 def get_users():
-    data = get_user_data()
+    data = get_users_data()
     response = jsonify({"status":1,"data":data})
     return response
+
+
+@app.route("/get_profile_info",methods=["GET"])
+def get_progile_info():
+    token = request.headers.get("Authorization")
+    data = validate_jwt_token(token)
+    response = jsonify({"status":1,"data":data})
+    return response
+
+
+@app.route("/edit_profile_info",methods=["POST"])
+def edit_profile_info():
+    json_data = request.get_json()
+    token = request.headers.get("Authorization")
+    data = validate_jwt_token(token)
+    res = update_profile_info(data["username"],json_data)
+    if res:
+        response = jsonify({"status":1,"message":"Successfully updated"})
+        return response
+    response = jsonify({"status":0,"message":"Something worong during update"})
+    return response
+    

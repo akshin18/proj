@@ -6,7 +6,9 @@ import python_socks
 from telethon.sync import TelegramClient
 import jwt
 
-from config import PARS_DIR, REGISTER_FIELDS, JWT_SECRET_KEY, db
+from config import PARS_DIR, REGISTER_FIELDS, JWT_SECRET_KEY, db, PROFILE_UPDATE_DATA
+
+
 
 
 def check_pars_files(files: dict):
@@ -84,9 +86,8 @@ def validate_jwt_token(token):
     try:
         # Decode the JWT token and verify its signature
         claims = jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS256"])
-
         # Check if the user exists in the database
-        user = db.user.find_one({"user": claims["sub"]})
+        user = db.users.find_one({"username": claims["username"]},{"_id":0,"updated_time":0,"created_time":0})
         if user is not None:
             return user
         else:
@@ -97,3 +98,13 @@ def validate_jwt_token(token):
     except jwt.InvalidTokenError:
         # The JWT token is invalid
         return None
+
+
+
+
+def check_update_date(data):
+    result = {}
+    for i in data:
+        if i in PROFILE_UPDATE_DATA:
+            result[i] = data[i]
+    return result

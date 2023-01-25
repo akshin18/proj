@@ -1,8 +1,9 @@
-from config import db
 from datetime import datetime
 from bson import ObjectId
 # db.test.insert_one({"test":"test"})
 # Mongo.db.users.insert_one({"name":"akshin","ok":"ol","as":1})
+from config import db
+from add_func import check_update_date
 
 
 def create_user(data):
@@ -50,7 +51,7 @@ def get_news_from_db():
     return data
 
 
-def get_user_data():
+def get_users_data():
     data = list(db.users.find({},{"_id":0,"updated_time":0}))
     return data
 
@@ -68,4 +69,9 @@ def get_market_data():
 
 def delete_news_data(_id):
     db.news.delete_one({"_id":ObjectId(f"{_id}")})
+    return True
+
+def update_profile_info(username,data):
+    data = check_update_date(data)
+    db.users.update_one({"username":username},{"$set":data})
     return True
