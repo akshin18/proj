@@ -76,8 +76,10 @@ def get_users():
 def get_progile_info():
     token = request.headers.get("Authorization")
     data = validate_jwt_token(token)
-    response = jsonify({"status":1,"data":data})
-    return response
+    if data:
+        response = jsonify({"status":1,"data":data})
+        return response
+    return jsonify({"status":0}), 403
 
 
 @app.route("/edit_profile_info",methods=["POST"])
@@ -85,11 +87,12 @@ def edit_profile_info():
     json_data = request.get_json()
     token = request.headers.get("Authorization")
     data = validate_jwt_token(token)
-    res = update_profile_info(data["username"],json_data)
-    if res:
-        response = jsonify({"status":1,"message":"Successfully updated"})
+    if data:
+        res = update_profile_info(data["username"],json_data)
+        if res:
+            response = jsonify({"status":1,"message":"Successfully updated"})
+            return response
+        response = jsonify({"status":0,"message":"Something worong during update"})
         return response
-    response = jsonify({"status":0,"message":"Something worong during update"})
-    return response
-    
-
+        
+    return jsonify({"status":0}), 403
