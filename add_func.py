@@ -5,6 +5,7 @@ import requests
 import python_socks
 from telethon.sync import TelegramClient
 import jwt
+from bson import ObjectId, json_util
 
 from config import PARS_DIR, REGISTER_FIELDS, JWT_SECRET_KEY, db, PROFILE_UPDATE_DATA
 
@@ -73,12 +74,11 @@ def check_register_entity(data: dict):
     return True
 
 
-def generate_jwt_token(user):
-    # Define the claims
-    claims = user
-    print(claims)
+def generate_jwt_token(data):
     # Generate the JWT token
-    token = jwt.encode(claims, JWT_SECRET_KEY, algorithm="HS256")
+    
+    data["_id"] = str(data["_id"])
+    token = jwt.encode(data, JWT_SECRET_KEY, algorithm="HS256")
     print(token.decode())
     return token.decode()
 
@@ -87,7 +87,7 @@ def validate_jwt_token(token):
         # Decode the JWT token and verify its signature
         claims = jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS256"])
         # Check if the user exists in the database
-        user = db.users.find_one({"username": claims["username"]},{"_id":0,"updated_time":0,"created_time":0})
+        user = db.users.find_one({"_id":ObjectId(claims["_id"]) },{"_id":0,"updated_time":0,"created_time":0})
         if user is not None:
             return user
         else:
@@ -105,6 +105,6 @@ def validate_jwt_token(token):
 def check_update_date(data):
     result = {}
     for i in data:
-        if i in PROFILE_UPDATE_DATA:
+        if i in PROFILE_UPDATE_DATA and data[i]:
             result[i] = data[i]
     return result

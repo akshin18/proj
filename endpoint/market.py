@@ -16,3 +16,11 @@ def get_market():
     data = get_market_data()
     response = jsonify({"status":1,"data":data})
     return response
+
+
+@app.route("/add_market",methods=["POST"])
+def add_market():
+    json = request.get_json()
+    file = request.files
+    print(file)
+    return jsonify({"res":"ok"})
