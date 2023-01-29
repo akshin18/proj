@@ -55,14 +55,14 @@ def login():
 
     # Check if the username and password are correct
     data = db.users.find_one({"username": username, "pwd": pwd},{"_id":1,"position":1})
-    data["time"] = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
-    if data is not None:
-        # Generate a JWT token for the user
-        token = generate_jwt_token(data)
-        return jsonify({"token": token,"position":data["position"]})
-    else:
-        # Return an error if the username or password is incorrect
-        return jsonify({"error": "Invalid username or password"}), 401
+    if data:
+        data["time"] = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+        if data is not None:
+            # Generate a JWT token for the user
+            token = generate_jwt_token(data)
+            return jsonify({"token": token,"position":data["position"]})
+    # Return an error if the username or password is incorrect
+    return jsonify({"error": "Invalid username or password"}), 401
 
 
 @app.route("/get_users",methods=["GET"])
