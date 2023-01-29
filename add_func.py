@@ -87,7 +87,10 @@ def validate_jwt_token(token):
         # Decode the JWT token and verify its signature
         claims = jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS256"])
         # Check if the user exists in the database
-        user = db.users.find_one({"_id":ObjectId(claims.get("_id","None")) },{"_id":0,"updated_time":0,"created_time":0})
+        if _id :=claims.get("_id",None):
+            user = db.users.find_one({"_id":ObjectId(_id) },{"_id":0,"updated_time":0,"created_time":0})
+        else:
+            return None
         if user is not None:
             return user
         else:
