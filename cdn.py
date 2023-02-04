@@ -20,4 +20,4 @@ def upload_file(file):
     return result.url
 
 
-print(upload_file("5.png"))
+# print(upload_file("5.png"))

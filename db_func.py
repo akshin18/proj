@@ -75,3 +75,13 @@ def update_profile_info(username,data):
     data = check_update_date(data)
     db.users.update_one({"username":username},{"$set":data})
     return True
+
+
+def add_market_data(image_url, title, price, content):
+    db.market.insert_one({
+        "url":image_url,
+        "price":price,
+        "name":title,
+        "content":content
+    })
+    return True
