@@ -42,3 +42,6 @@ def delete_market():
     return jsonify({"status":0,"message":"Does not exists main keys"}),400
 
 
+
+
+
