@@ -80,11 +80,11 @@ def update_profile_info(username,data):
     return True
 
 
-def add_market_data(image_url, title, price, content):
+def add_market_data(image_url, name, price, content):
     db.market.insert_one({
         "url":image_url,
         "price":price,
-        "name":title,
+        "name":name,
         "content":content
     })
     return True
@@ -93,3 +93,6 @@ def add_market_data(image_url, title, price, content):
 def delete_market_data(_id):
     db.market.delete_one({"_id":ObjectId(f"{_id}")})
     return True
+
+def buy_market_data(_id,user):
+    ...
