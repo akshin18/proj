@@ -63,7 +63,10 @@ def delete_user(username):
         return False
 
 def get_market_data():
-    data = list(db.market.find({},{"_id":0}))
+    data = list(db.market.find({}))
+    print(data)
+    for i in data:
+        i["_id"] = str(i["_id"])
     return data
 
 
@@ -84,4 +87,9 @@ def add_market_data(image_url, title, price, content):
         "name":title,
         "content":content
     })
+    return True
+
+
+def delete_market_data(_id):
+    db.market.delete_one({"_id":ObjectId(f"{_id}")})
     return True

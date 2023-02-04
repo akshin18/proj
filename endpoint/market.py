@@ -1,7 +1,7 @@
 from app import app
 from flask import request,jsonify
 from add_func import check_register_entity
-from db_func import get_market_data, add_market_data
+from db_func import get_market_data, add_market_data, delete_market_data
 from flask_cors import cross_origin
 
 from config import db, PROJ_STATE
@@ -31,3 +31,14 @@ def add_market():
         return jsonify({"status":1,"message":"ok"})
     print(title, price,content)
     return jsonify({"status":0,"message":"Does not exists main keys"}),400
+
+@app.route("/delete_market",methods=["DELETE"])
+def delete_market():
+    data = request.get_json()
+    if _id := data.get("_id"):
+        data = delete_market_data(_id)
+        response = jsonify({"status":1,"data":data})
+        return response
+    return jsonify({"status":0,"message":"Does not exists main keys"}),400
+
+
