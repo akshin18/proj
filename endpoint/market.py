@@ -44,12 +44,17 @@ def delete_market():
 
 @app.route("/buy_market",methods=["POST"])
 def buy_market():
+    token = request.cookies["token"]
     data = request.get_json()
     if _id := data.get("_id"):
-        data = buy_market_data(_id)
-        response = jsonify({"status":1,"data":data})
-        return response
-    return jsonify({"status":0,"message":"Does not exists main keys"}),400
+        user = validate_jwt_token(token)
+        res = buy_market_data(_id,user)
+        if res:
+            response = jsonify({"status":1,"message":"Successfully bought"})
+            return response,400
+    response = jsonify({"status":0,"message":"Some error"})
+    return response,400
+
 
 
 

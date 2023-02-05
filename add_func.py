@@ -76,16 +76,16 @@ def check_register_entity(data: dict):
 
 def generate_jwt_token(data):
     # Generate the JWT token
-    
     data["_id"] = str(data["_id"])
-    token = jwt.encode(data, JWT_SECRET_KEY, algorithm="HS256")
+    token = jwt.encode(data, JWT_SECRET_KEY, algorithm="HS512")
     print(token.decode())
     return token.decode()
 
 def validate_jwt_token(token):
+    claims = jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS512"])
     try:
         # Decode the JWT token and verify its signature
-        claims = jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS256"])
+        claims = jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS512"])
         # Check if the user exists in the database
         if _id :=claims.get("_id",None):
             user = db.users.find_one({"_id":ObjectId(_id) },{"_id":0,"updated_time":0,"created_time":0})
@@ -95,6 +95,7 @@ def validate_jwt_token(token):
             return user
         else:
             return None
+
     except jwt.ExpiredSignatureError:
         # The JWT token has expired
         return None

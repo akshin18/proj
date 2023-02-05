@@ -34,34 +34,6 @@ from add_func import generate_jwt_token, validate_jwt_token
 #     return response
 
 
-
-@app.before_request
-def before_request():
-    
-    if request.method == 'OPTIONS':
-        resp = app.make_default_options_response()
-
-        headers = None
-        if 'ACCESS_CONTROL_REQUEST_HEADERS' in request.headers:
-            headers = request.headers['ACCESS_CONTROL_REQUEST_HEADERS']
-
-        h = resp.headers
-
-        # Allow the origin which made the XHR
-        h['Access-Control-Allow-Origin'] = request.headers['Origin']
-        # Allow the actual method
-        h['Access-Control-Allow-Methods'] = request.headers[
-            'Access-Control-Request-Method']
-        # Allow for 10 seconds
-        h['Access-Control-Max-Age'] = "10"
-
-        h['Content-Type'] = 'application/json'
-        print("type of request" + str(type(h['Access-Control-Allow-Origin'])))
-        # We also keep current headers
-        if headers is not None:
-            h['Access-Control-Allow-Headers'] = headers
-
-        return resp
 #     if PROJ_STATE == "DEBUG":
 #         return
 #     token = request.headers.get("Authorization")

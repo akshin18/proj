@@ -95,4 +95,13 @@ def delete_market_data(_id):
     return True
 
 def buy_market_data(_id,user):
-    ...
+    ttk = db.market.find_one({"_id":ObjectId(_id)},{"price":1,"_id":0})["price"]
+    res = db.users.update_one({"username":user["username"],"ttk":{"$gte":ttk}},{"$inc":{"ttk":-ttk}})
+    if res.raw_result["n"]:
+        create_order(_id,user["username"])
+        return True
+    return None
+
+
+def create_order(stuff_if,username):
+    db.orders.insert_one({"username":username,"stuff_id":ObjectId(stuff_if),"complated":0})

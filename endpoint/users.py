@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import request,jsonify
+from flask import request,jsonify, session
 from flask_cors import cross_origin
 
 from app import app
@@ -13,8 +13,8 @@ from db_func import create_user, get_users_data,update_profile_info
 
 
 
-@app.before_request
-def before_request():...
+# @app.before_request
+# def before_request():...
     #     if PROJ_STATE == "DEBUG":
 #         return
 #     token = request.headers.get("Authorization")
@@ -74,7 +74,7 @@ def get_users():
 
 @app.route("/get_profile_info",methods=["GET"])
 def get_progile_info():
-    token = request.headers.get("Authorization")
+    token = request.cookies["token"]
     data = validate_jwt_token(token)
     if data:
         response = jsonify({"status":1,"data":data})
@@ -85,7 +85,7 @@ def get_progile_info():
 @app.route("/edit_profile_info",methods=["POST"])
 def edit_profile_info():
     json_data = request.get_json()
-    token = request.headers.get("Authorization")
+    token = request.cookies["token"]
     data = validate_jwt_token(token)
     if data:
         res = update_profile_info(data["username"],json_data)
