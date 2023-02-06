@@ -57,5 +57,14 @@ def buy_market():
 
 
 
+@app.route("/test_cookie",methods=["POST"])
+def test_cookie():
+    token = request.cookies.get("token","null")
+    response = jsonify({"status":1,"token":token})
+    return response
+
+
+
+
 
 
