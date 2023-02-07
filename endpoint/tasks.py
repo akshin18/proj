@@ -7,10 +7,19 @@ import json
 
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
-from db_func import create_user, add_news, get_news_from_db,delete_news_data
+from db_func import add_task, get_task_data
 
 
 
+
+@app.route("/get_task", methods=["GET"])
+def get_task():
+    # Get the username and password from the request body
+    print("hello")
+    data = get_task_data()
+    print(data)
+    response = jsonify({"status":1,"data":data})
+    return response
 
 @app.route("/post_task", methods=["POST"])
 def post_task():
@@ -18,10 +27,13 @@ def post_task():
     data = request.get_json()
 
     title = data.get("title",None)
-    text = data.get("text",None)
-    color = data.get("color",None)
-    hashtag = data.get("hashtag",None)
-    if add_news(title,text,color,hashtag):
+    content = data.get("content",None)
+    worker = data.get("worker",None)
+    fine = data.get("fine",None)
+    minute = data.get("minute",None)
+    hour = data.get("hour",None)
+    feedback = data.get("feedback",None)
     
+    if add_task(title,content,worker,fine,minute,hour,feedback):
         return jsonify({"status": 1}), 200
     return jsonify({"status": 0,"message":"Wrong detailes"}), 400

@@ -42,6 +42,20 @@ def add_news(title,text,color,hashtag):
         "date":datetime.now().strftime("%d.%m"),
     })
     return True
+
+def add_task(title,content,worker,fine,minute,hour,feedback):
+    now = datetime.now()
+    db.tasks.insert_one({
+        "title":title,
+        "content":content,
+        "worker":worker,
+        "fine":fine,
+        "minute":minute,
+        "hour":hour,
+        "feedback":feedback,
+        "created_time":now
+    })
+    return True
 def check_username(username):
     return db.users.find_one({"username": username})
 
@@ -106,3 +120,10 @@ def buy_market_data(_id,user):
 
 def create_order(stuff_if,username,code):
     db.orders.insert_one({"username":username,"stuff_id":ObjectId(stuff_if),"complated":0,"code":code})
+
+
+def get_task_data():
+    data = list(db.tasks.find({},{"created_time":0}))
+    for i in data:
+        i["_id"] = str(i["_id"]) 
+    return data
