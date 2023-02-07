@@ -49,10 +49,10 @@ def buy_market():
     data = request.get_json()
     if _id := data.get("_id"):
         user = validate_jwt_token(token)
-        res = buy_market_data(_id,user)
-        if res:
-            response = jsonify({"status":1,"message":"Successfully bought"})
-            return response,400
+        code = buy_market_data(_id,user)
+        if code:
+            response = jsonify({"status":1,"message":"Successfully bought","code":code})
+            return response
     response = jsonify({"status":0,"message":"Some error"})
     return response,400
 

@@ -1,5 +1,7 @@
 import os
 import json
+import string
+import random
 
 import requests
 import python_socks
@@ -112,3 +114,10 @@ def check_update_date(data):
         if i in PROFILE_UPDATE_DATA and data[i]:
             result[i] = data[i]
     return result
+
+
+
+def generate_code():
+    list_of_elements = list(string.ascii_letters+string.digits)
+    random.shuffle(list_of_elements)
+    return "".join(list_of_elements[:15])
