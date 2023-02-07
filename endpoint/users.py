@@ -47,7 +47,6 @@ def register():
 def login():
     # Get the username and password from the request body
     data = request.get_json()
-
     username = data.get("username",None)
     pwd = data.get("password",None)
     if not username or not pwd:
@@ -60,7 +59,9 @@ def login():
         if data is not None:
             # Generate a JWT token for the user
             token = generate_jwt_token(data)
-            return jsonify({"token": token,"position":data["position"]})
+            response = jsonify({"position":data["position"]})
+            response.set_cookie("token",token)
+            return response
     # Return an error if the username or password is incorrect
     return jsonify({"error": "Invalid username or password"}), 401
 
