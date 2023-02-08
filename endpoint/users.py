@@ -59,8 +59,7 @@ def login():
         if data is not None:
             # Generate a JWT token for the user
             token = generate_jwt_token(data)
-            response = jsonify({"position":data["position"]})
-            response.set_cookie("token",token)
+            response = jsonify({"position":data["position"],"token":token})
             return response
     # Return an error if the username or password is incorrect
     return jsonify({"error": "Invalid username or password"}), 401
@@ -75,7 +74,7 @@ def get_users():
 
 @app.route("/get_profile_info",methods=["GET"])
 def get_progile_info():
-    token = request.cookies["token"]
+    token = request.headers["token"]
     data = validate_jwt_token(token)
     if data:
         response = jsonify({"status":1,"data":data})
@@ -86,7 +85,7 @@ def get_progile_info():
 @app.route("/edit_profile_info",methods=["POST"])
 def edit_profile_info():
     json_data = request.get_json()
-    token = request.cookies["token"]
+    token = request.headers["token"]
     data = validate_jwt_token(token)
     if data:
         res = update_profile_info(data["username"],json_data)

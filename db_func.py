@@ -43,17 +43,19 @@ def add_news(title,text,color,hashtag):
     })
     return True
 
-def add_task(title,content,worker,fine,minute,hour,feedback):
+def add_task(title,content,worker,manager,fine,minute,hour,feedback):
     now = datetime.now()
     db.tasks.insert_one({
         "title":title,
         "content":content,
         "worker":worker,
+        "manager":manager,
         "fine":fine,
         "minute":minute,
         "hour":hour,
         "feedback":feedback,
-        "created_time":now
+        "created_time":now,
+        "state":0
     })
     return True
 def check_username(username):
@@ -122,8 +124,37 @@ def create_order(stuff_if,username,code):
     db.orders.insert_one({"username":username,"stuff_id":ObjectId(stuff_if),"complated":0,"code":code})
 
 
-def get_task_data():
-    data = list(db.tasks.find({},{"created_time":0}))
-    for i in data:
-        i["_id"] = str(i["_id"]) 
-    return data
+def get_task_data(user_id):
+    work = list(db.tasks.find({"worker":user_id},{"created_time":0}))
+    manage = list(db.tasks.find({"manager":user_id},{"created_time":0}))
+    for i in work:
+        i["_id"] = str(i["_id"])
+    for i in manage:
+        i["_id"] = str(i["_id"])
+    return work,manage
+
+
+def confirm_task_data(user_id):
+    res = db.users.update_one({"worker":user_id,"state":{"$in":[0,3]}},{"state":1})
+    if res.raw_result["n"]:
+        return True
+    return False
+
+
+def complate_task_data(user_id):
+    res = db.users.update_one({"worker":user_id,"state":1},{"state":2})
+    if res.raw_result["n"]:
+        return True
+    return False
+
+def reopen_task_data(user_id):
+    res = db.users.update_one({"manager":user_id,"state":2},{"state":3})
+    if res.raw_result["n"]:
+        return True
+    return False
+
+def finish_task_data(user_id):
+    res = db.users.update_one({"manager":user_id,"state":2},{"state":4})
+    if res.raw_result["n"]:
+        return True
+    return False
