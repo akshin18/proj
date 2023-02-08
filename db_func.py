@@ -125,8 +125,8 @@ def create_order(stuff_if,username,code):
 
 
 def get_task_data(user_id):
-    work = list(db.tasks.find({"worker":user_id},{"created_time":0}))
-    manage = list(db.tasks.find({"manager":user_id},{"created_time":0}))
+    work = list(db.tasks.find({"worker":(user_id)},{"created_time":0}))
+    manage = list(db.tasks.find({"manager":(user_id)},{"created_time":0}))
     for i in work:
         i["_id"] = str(i["_id"])
     for i in manage:
@@ -135,26 +135,26 @@ def get_task_data(user_id):
 
 
 def confirm_task_data(user_id):
-    res = db.users.update_one({"worker":user_id,"state":{"$in":[0,3]}},{"state":1})
+    res = db.tasks.update_one({"worker":(user_id),"state":{"$in":[0,3]}},{"state":1})
     if res.raw_result["n"]:
         return True
     return False
 
 
 def complate_task_data(user_id):
-    res = db.users.update_one({"worker":user_id,"state":1},{"state":2})
+    res = db.tasks.update_one({"worker":(user_id),"state":1},{"state":2})
     if res.raw_result["n"]:
         return True
     return False
 
 def reopen_task_data(user_id):
-    res = db.users.update_one({"manager":user_id,"state":2},{"state":3})
+    res = db.tasks.update_one({"manager":(user_id),"state":2},{"state":3})
     if res.raw_result["n"]:
         return True
     return False
 
 def finish_task_data(user_id):
-    res = db.users.update_one({"manager":user_id,"state":2},{"state":4})
+    res = db.tasks.update_one({"manager":(user_id),"state":2},{"state":4})
     if res.raw_result["n"]:
         return True
     return False

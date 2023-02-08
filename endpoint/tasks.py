@@ -57,11 +57,11 @@ def get_task():
 def post_task():
     # Get the username and password from the request body
     data = request.get_json()
-
     title = data.get("title",None)
     content = data.get("content",None)
     worker = data.get("worker",None)
-    manager = data.get("manager",None)
+    token = request.headers.get("token")
+    manager = validate_jwt_token(token).get("_id")
     fine = data.get("fine",None)
     minute = data.get("minute",None)
     hour = data.get("hour",None)
