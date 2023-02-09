@@ -7,7 +7,7 @@ import json
 
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
-from db_func import add_task, get_task_data, confirm_task_data, complate_task_data, reopen_task_data, finish_task_data
+from db_func import add_task, get_task_data, confirm_task_data, complate_task_data, reopen_task_data, finish_task_data, get_users_position_data
 
 
 #"
@@ -74,3 +74,17 @@ def post_task():
     if add_task(title,content,worker,manager,fine,minute,hour,feedback):
         return jsonify({"status": 1}), 200
     return jsonify({"status": 0,"message":"Wrong detailes"}), 400
+
+
+
+@app.route("/get_workers",methods=["GET"])
+def get_workers():
+    token = request.headers.get("token")
+    position = validate_jwt_token(token).get("position")
+    if position <= 2:
+        deeded_postion = position + 1
+        data = get_users_position_data(deeded_postion)
+        response = jsonify({"status":1,"data":data})
+        return response
+    response = jsonify({"status":0,"message":"You do not have permission"})
+    return response

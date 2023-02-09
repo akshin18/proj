@@ -158,3 +158,11 @@ def finish_task_data(user_id):
     if res.raw_result["n"]:
         return True
     return False
+
+
+
+def get_users_position_data(deeded_postion):
+    res = list(db.users.find({"position":deeded_postion},{"_id":1,"username":1}))
+    for i in res:
+        i["_id"] = str(i["_id"])
+    return res
