@@ -56,7 +56,7 @@ def get_task():
 @app.route("/post_task", methods=["POST"])
 def post_task():
     # Get the username and password from the request body
-    data = request.get_json()
+    data = request.form
     title = data.get("title",None)
     content = data.get("content",None)
     worker = data.get("worker",None)

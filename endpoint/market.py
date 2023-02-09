@@ -48,9 +48,11 @@ def buy_market():
     # token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJfaWQiOiI2M2JlMDA2OTUzNGUyNzQwODQ4M2NhZmQiLCJwb3NpdGlvbiI6MSwidGltZSI6IjA3LjAyLjIwMjMgMjM6NDQ6MzEifQ.mArdsXdSbdgrhNhvLUXmSoL_wMcYKU3MpIdZwRw6SGERHpt-goTIIE9M6gNsNJGjHOa5BHN6Mw8mzh9YsZbsnQ"
     data = request.get_json()
     if _id := data.get("_id"):
+        print("1")
         user = validate_jwt_token(token)
         code = buy_market_data(_id,user)
         if code:
+            print("1")
             response = jsonify({"status":1,"message":"Successfully bought","code":code})
             return response
     response = jsonify({"status":0,"message":"Some error"})
