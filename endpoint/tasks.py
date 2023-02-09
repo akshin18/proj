@@ -50,6 +50,10 @@ def get_task():
     token = request.headers.get("token")
     user = validate_jwt_token(token)
     work_data,manage_data = get_task_data(user["_id"])
+    if work_data == []:
+        work_data = [{}]
+    if manage_data == []:
+        manage_data = [{}]
     response = jsonify({"status":1,"work":work_data,"manage":manage_data})
     return response
 
