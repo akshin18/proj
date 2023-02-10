@@ -22,27 +22,31 @@ from db_func import add_task, get_task_data, confirm_task_data, complate_task_da
 
 @app.route("/confirm_task",methods=["POST"])
 def confirm_task():
+    _id = request.get_json().get("_id")
     token = request.headers.get("token")
     user = validate_jwt_token(token)
-    confirm_task_data(user["_id"])
+    confirm_task_data(user["_id"],_id)
 
 @app.route("/complate_task",methods=["POST"])
 def complate_task():
+    _id = request.get_json().get("_id")
     token = request.headers.get("token")
     user = validate_jwt_token(token)
-    complate_task_data(user["_id"])
+    complate_task_data(user["_id"],_id)
 
 @app.route("/reopen_task",methods=["POST"])
 def reopen_task():
+    _id = request.get_json().get("_id")
     token = request.headers.get("token")
     user = validate_jwt_token(token)
-    reopen_task_data(user["_id"])
+    reopen_task_data(user["_id"],_id)
 
 @app.route("/finish_task",methods=["POST"])
 def finish_task():
+    _id = request.get_json().get("_id")
     token = request.headers.get("token")
     user = validate_jwt_token(token)
-    finish_task_data(user["_id"])
+    finish_task_data(user["_id"],_id)
 
 @app.route("/get_task", methods=["GET"])
 def get_task():
