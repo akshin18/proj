@@ -135,26 +135,27 @@ def get_task_data(user_id):
 
 
 def confirm_task_data(user_id,_id):
-    res = db.tasks.update_one({"worker":(user_id),"state":{"$in":[0,3]},"_id":ObjectId(_id)},{"state":1})
+    res = db.tasks.update_one({"worker":(user_id),"state":{"$in":[0,3]},"_id":ObjectId(_id)},{"$set":{"state":1}})
+    print(res.raw_result)
     if res.raw_result["n"]:
         return True
     return False
 
 
 def complate_task_data(user_id,_id):
-    res = db.tasks.update_one({"worker":(user_id),"state":1,"_id":ObjectId(_id)},{"state":2})
+    res = db.tasks.update_one({"worker":(user_id),"state":1,"_id":ObjectId(_id)},{"$set":{"state":2}})
     if res.raw_result["n"]:
         return True
     return False
 
 def reopen_task_data(user_id,_id):
-    res = db.tasks.update_one({"manager":(user_id),"state":2,"_id":ObjectId(_id)},{"state":3})
+    res = db.tasks.update_one({"manager":(user_id),"state":2,"_id":ObjectId(_id)},{"$set":{"state":3}})
     if res.raw_result["n"]:
         return True
     return False
 
 def finish_task_data(user_id,_id):
-    res = db.tasks.update_one({"manager":(user_id),"state":2,"_id":ObjectId(_id)},{"state":4})
+    res = db.tasks.update_one({"manager":(user_id),"state":2,"_id":ObjectId(_id)},{"$set":{"state":4}})
     if res.raw_result["n"]:
         return True
     return False

@@ -25,28 +25,49 @@ def confirm_task():
     _id = request.get_json().get("_id")
     token = request.headers.get("token")
     user = validate_jwt_token(token)
-    confirm_task_data(user["_id"],_id)
+    if confirm_task_data(user["_id"],_id):
+        response = jsonify({"status":1,"message":"Successfully updated"})
+        return response
+    response = jsonify({"status":0,"message":"Some thing went error"})
+    return response
+
 
 @app.route("/complate_task",methods=["POST"])
 def complate_task():
     _id = request.get_json().get("_id")
     token = request.headers.get("token")
     user = validate_jwt_token(token)
-    complate_task_data(user["_id"],_id)
+    if complate_task_data(user["_id"],_id):
+        response = jsonify({"status":1,"message":"Successfully updated"})
+        return response
+    response = jsonify({"status":0,"message":"Some thing went error"})
+    return response
+
+    
 
 @app.route("/reopen_task",methods=["POST"])
 def reopen_task():
     _id = request.get_json().get("_id")
     token = request.headers.get("token")
     user = validate_jwt_token(token)
-    reopen_task_data(user["_id"],_id)
+    if reopen_task_data(user["_id"],_id):
+        response = jsonify({"status":1,"message":"Successfully updated"})
+        return response
+    response = jsonify({"status":0,"message":"Some thing went error"})
+    return response
+
 
 @app.route("/finish_task",methods=["POST"])
 def finish_task():
     _id = request.get_json().get("_id")
     token = request.headers.get("token")
     user = validate_jwt_token(token)
-    finish_task_data(user["_id"],_id)
+    if finish_task_data(user["_id"],_id):
+        response = jsonify({"status":1,"message":"Successfully updated"})
+        return response
+    response = jsonify({"status":0,"message":"Some thing went error"})
+    return response
+
 
 @app.route("/get_task", methods=["GET"])
 def get_task():
