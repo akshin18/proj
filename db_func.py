@@ -43,8 +43,12 @@ def add_news(title,text,color,hashtag):
     })
     return True
 
-def add_task(title,content,worker,manager,fine,minute,hour,date,feedback):
+def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,user_state=2):
     now = datetime.now()
+    state = 0
+    if user_state == 1:
+        state = 1
+
     db.tasks.insert_one({
         "title":title,
         "content":content,
@@ -54,7 +58,7 @@ def add_task(title,content,worker,manager,fine,minute,hour,date,feedback):
         "date":f"{date} {hour}:{minute}",
         "feedback":feedback,
         "created_time":now,
-        "state":0
+        "state":state
     })
     return True
 def check_username(username):
