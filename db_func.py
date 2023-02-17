@@ -43,7 +43,7 @@ def add_news(title,text,color,hashtag):
     })
     return True
 
-def add_task(title,content,worker,manager,fine,minute,hour,feedback):
+def add_task(title,content,worker,manager,fine,minute,hour,date,feedback):
     now = datetime.now()
     db.tasks.insert_one({
         "title":title,
@@ -51,8 +51,7 @@ def add_task(title,content,worker,manager,fine,minute,hour,feedback):
         "worker":worker,
         "manager":manager,
         "fine":fine,
-        "minute":minute,
-        "hour":hour,
+        "date":f"{date} {hour}:{minute}",
         "feedback":feedback,
         "created_time":now,
         "state":0
