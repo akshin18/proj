@@ -90,16 +90,16 @@ def post_task():
     content = data.get("content",None)
     worker = data.get("worker",None)
     token = request.headers.get("token")
-    user = validate_jwt_token(token).get("_id")
+    user = validate_jwt_token(token)
     manager = user.get("_id")
-    state = user.get("state")
+    position = user.get("position")
     fine = data.get("fine",None)
     minute = data.get("minute",None)
     hour = data.get("hour",None)
     date = data.get("date",None)
     feedback = data.get("feedback",None)
     
-    if add_task(title,content,worker,manager,fine,minute,hour,date,feedback,user_state=state):
+    if add_task(title,content,worker,manager,fine,minute,hour,date,feedback,user_state=position):
         return jsonify({"status": 1}), 200
     return jsonify({"status": 0,"message":"Wrong detailes"}), 400
 

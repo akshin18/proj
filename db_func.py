@@ -46,6 +46,7 @@ def add_news(title,text,color,hashtag):
 def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,user_state=2):
     now = datetime.now()
     state = 0
+    print(user_state)
     if user_state == 1:
         state = 1
 
