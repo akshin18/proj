@@ -43,7 +43,7 @@ def add_news(title,text,color,hashtag):
     })
     return True
 
-def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,user_state=2):
+def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,_type,user_state=2):
     now = datetime.now()
     state = 0
     print(user_state)
@@ -61,7 +61,8 @@ def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,user_st
             "feedback":feedback,
             "created_time":now,
             "messsages":[],
-            "state":state
+            "state":state,
+            "type":_type
         })
     return True
 def check_username(username):

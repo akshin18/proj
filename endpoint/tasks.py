@@ -98,8 +98,9 @@ def post_task():
     hour = data.get("hour",None)
     date = data.get("date",None)
     feedback = data.get("feedback",None)
+    _type = data.get("type",None) 
     
-    if add_task(title,content,worker,manager,fine,minute,hour,date,feedback,user_state=position):
+    if add_task(title,content,worker,manager,fine,minute,hour,date,feedback,_type,user_state=position):
         return jsonify({"status": 1}), 200
     return jsonify({"status": 0,"message":"Wrong detailes"}), 400
 
