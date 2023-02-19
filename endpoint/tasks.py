@@ -34,10 +34,12 @@ def confirm_task():
 
 @app.route("/complate_task",methods=["POST"])
 def complate_task():
-    _id = request.get_json().get("_id")
+    data = request.get_json()
+    _id = data.get("_id")
+    message = data.get("message")
     token = request.headers.get("token")
     user = validate_jwt_token(token)
-    if complate_task_data(user["_id"],_id):
+    if complate_task_data(user["_id"],_id,message):
         response = jsonify({"status":1,"message":"Successfully updated"})
         return response
     response = jsonify({"status":0,"message":"Some thing went error"})

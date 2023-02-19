@@ -149,8 +149,8 @@ def confirm_task_data(user_id,_id):
     return False
 
 
-def complate_task_data(user_id,_id):
-    res = db.tasks.update_one({"worker":user_id,"state":1,"_id":ObjectId(_id)},{"$set":{"state":2}})
+def complate_task_data(user_id,_id,message):
+    res = db.tasks.update_one({"worker":user_id,"state":1,"_id":ObjectId(_id)},{"$set":{"state":2},"$push":{"messages":message}})
     if res.raw_result["n"]:
         return True
     return False
