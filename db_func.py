@@ -50,17 +50,19 @@ def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,user_st
     if user_state == 1:
         state = 1
 
-    db.tasks.insert_one({
-        "title":title,
-        "content":content,
-        "worker":worker,
-        "manager":manager,
-        "fine":fine,
-        "date":f"{date} {hour}:{minute}",
-        "feedback":feedback,
-        "created_time":now,
-        "state":state
-    })
+    for i in worker:
+        db.tasks.insert_one({
+            "title":title,
+            "content":content,
+            "worker":i,
+            "manager":manager,
+            "fine":fine,
+            "date":f"{date} {hour}:{minute}",
+            "feedback":feedback,
+            "created_time":now,
+            "messsages":[],
+            "state":state
+        })
     return True
 def check_username(username):
     return db.users.find_one({"username": username})
@@ -129,7 +131,7 @@ def create_order(stuff_if,username,code):
 
 
 def get_task_data(user_id):
-    work = list(db.tasks.find({"worker":(user_id)},{"created_time":0}))
+    work = list(db.tasks.find({"worker":user_id},{"created_time":0}))
     manage = list(db.tasks.find({"manager":(user_id)},{"created_time":0}))
     for i in work:
         i["_id"] = str(i["_id"])
@@ -139,7 +141,7 @@ def get_task_data(user_id):
 
 
 def confirm_task_data(user_id,_id):
-    res = db.tasks.update_one({"worker":(user_id),"state":{"$in":[0,3]},"_id":ObjectId(_id)},{"$set":{"state":1}})
+    res = db.tasks.update_one({"worker":user_id,"state":{"$in":[0,3]},"_id":ObjectId(_id)},{"$set":{"state":1}})
     print(res.raw_result)
     if res.raw_result["n"]:
         return True
@@ -147,7 +149,7 @@ def confirm_task_data(user_id,_id):
 
 
 def complate_task_data(user_id,_id):
-    res = db.tasks.update_one({"worker":(user_id),"state":1,"_id":ObjectId(_id)},{"$set":{"state":2}})
+    res = db.tasks.update_one({"worker":user_id,"state":1,"_id":ObjectId(_id)},{"$set":{"state":2}})
     if res.raw_result["n"]:
         return True
     return False
