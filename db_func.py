@@ -60,7 +60,7 @@ def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,_type,u
             "date":f"{date} {hour}:{minute}",
             "feedback":feedback,
             "created_time":now,
-            "messsages":[],
+            "messages":"",
             "state":state,
             "type":_type
         })
@@ -150,7 +150,7 @@ def confirm_task_data(user_id,_id):
 
 
 def complate_task_data(user_id,_id,message):
-    res = db.tasks.update_one({"worker":user_id,"state":1,"_id":ObjectId(_id)},{"$set":{"state":2},"$push":{"messages":message}})
+    res = db.tasks.update_one({"worker":user_id,"state":1,"_id":ObjectId(_id)},{"$set":{"state":2,"messages":message}})
     if res.raw_result["n"]:
         return True
     return False
