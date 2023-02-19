@@ -50,7 +50,7 @@ def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,user_st
     if user_state == 1:
         state = 1
 
-    for i in worker:
+    for i in worker.split(","):
         db.tasks.insert_one({
             "title":title,
             "content":content,
