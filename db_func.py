@@ -23,27 +23,28 @@ def create_user(data):
         "mmr": 0,
         "ttk": 0,
         "tenge": 0,
-        "session":"",
-        "pwd":data["pwd"],
-        "project":data["project"],
+        "session": "",
+        "pwd": data["pwd"],
+        "project": data["project"],
         "created_time": datetime.now(),
         "updated_time": datetime.now()
     })
     return True
 
 
-def add_news(title,text,color,hashtag):
+def add_news(title, text, color, hashtag):
     db.news.insert_one({
-        "title":title,
-        "text":text,
-        "color":color,
-        "hashtag":hashtag,
-        "time":datetime.now().strftime("%H:%M"),
-        "date":datetime.now().strftime("%d.%m"),
+        "title": title,
+        "text": text,
+        "color": color,
+        "hashtag": hashtag,
+        "time": datetime.now().strftime("%H:%M"),
+        "date": datetime.now().strftime("%d.%m"),
     })
     return True
 
-def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,_type,user_state=2):
+
+def add_task(title, content, worker, manager, fine, minute, hour, date, feedback, _type, user_state=2):
     now = datetime.now()
     state = 0
     print(user_state)
@@ -52,38 +53,42 @@ def add_task(title,content,worker,manager,fine,minute,hour,date,feedback,_type,u
 
     for i in worker.split(","):
         db.tasks.insert_one({
-            "title":title,
-            "content":content,
-            "worker":i,
-            "manager":manager,
-            "fine":fine,
-            "date":f"{date} {hour}:{minute}",
-            "feedback":feedback,
-            "created_time":now,
-            "messages":"",
-            "state":state,
-            "type":_type
+            "title": title,
+            "content": content,
+            "worker": i,
+            "manager": manager,
+            "fine": fine,
+            "date": f"{date} {hour}:{minute}",
+            "feedback": feedback,
+            "created_time": now,
+            "messages": "",
+            "state": state,
+            "type": _type
         })
     return True
+
+
 def check_username(username):
     return db.users.find_one({"username": username})
 
 
 def get_news_from_db():
-    data = list(db.news.find({},{}))
+    data = list(db.news.find({}, {}))
     return data
 
 
 def get_users_data():
-    data = list(db.users.find({},{"_id":0,"updated_time":0}))
+    data = list(db.users.find({}, {"_id": 0, "updated_time": 0}))
     return data
+
 
 def delete_user(username):
     try:
-        db.users.delete_one({"username":username})
+        db.users.delete_one({"username": username})
         return True
     except:
         return False
+
 
 def get_market_data():
     data = list(db.market.find({}))
@@ -94,83 +99,135 @@ def get_market_data():
 
 
 def delete_news_data(_id):
-    db.news.delete_one({"_id":ObjectId(f"{_id}")})
+    db.news.delete_one({"_id": ObjectId(f"{_id}")})
     return True
 
-def update_profile_info(username,data):
+
+def update_profile_info(username, data):
     data = check_update_date(data)
-    db.users.update_one({"username":username},{"$set":data})
+    db.users.update_one({"username": username}, {"$set": data})
     return True
 
 
 def add_market_data(image_url, name, price, content):
     db.market.insert_one({
-        "url":image_url,
-        "price":price,
-        "name":name,
-        "content":content
+        "url": image_url,
+        "price": price,
+        "name": name,
+        "content": content
     })
     return True
 
 
 def delete_market_data(_id):
-    db.market.delete_one({"_id":ObjectId(f"{_id}")})
+    db.market.delete_one({"_id": ObjectId(f"{_id}")})
     return True
 
-def buy_market_data(_id,user):
+
+def buy_market_data(_id, user):
     code = generate_code()
-    ttk = db.market.find_one({"_id":ObjectId(_id)},{"price":1,"_id":0})["price"]
-    res = db.users.update_one({"username":user["username"],"ttk":{"$gte":ttk}},{"$inc":{"ttk":-ttk}})
+    ttk = db.market.find_one({"_id": ObjectId(_id)}, {
+                             "price": 1, "_id": 0})["price"]
+    res = db.users.update_one({"username": user["username"], "ttk": {
+                              "$gte": ttk}}, {"$inc": {"ttk": -ttk}})
     if res.raw_result["n"]:
-        create_order(_id,user["username"],code)
+        create_order(_id, user["username"], code)
         return code
     return None
 
 
-def create_order(stuff_if,username,code):
-    db.orders.insert_one({"username":username,"stuff_id":ObjectId(stuff_if),"complated":0,"code":code})
+def create_order(stuff_if, username, code):
+    db.orders.insert_one({"username": username, "stuff_id": ObjectId(
+        stuff_if), "complated": 0, "code": code})
 
 
 def get_task_data(user_id):
-    work = list(db.tasks.find({"worker":user_id},{"created_time":0}))
-    manage = list(db.tasks.find({"manager":(user_id)},{"created_time":0}))
+    work = list(db.tasks.find({"worker": user_id}, {"created_time": 0}))
+    manage = list(db.tasks.find({"manager": (user_id)}, {"created_time": 0}))
     for i in work:
         i["_id"] = str(i["_id"])
     for i in manage:
         i["_id"] = str(i["_id"])
-    return work,manage
+    return work, manage
 
 
-def confirm_task_data(user_id,_id):
-    res = db.tasks.update_one({"worker":user_id,"state":{"$in":[0,3]},"_id":ObjectId(_id)},{"$set":{"state":1}})
+def confirm_task_data(user_id, _id):
+    res = db.tasks.update_one({"worker": user_id, "state": {
+                              "$in": [0, 3]}, "_id": ObjectId(_id)}, {"$set": {"state": 1}})
     print(res.raw_result)
     if res.raw_result["n"]:
         return True
     return False
 
 
-def complate_task_data(user_id,_id,message):
-    res = db.tasks.update_one({"worker":user_id,"state":1,"_id":ObjectId(_id)},{"$set":{"state":2,"messages":message}})
+def complate_task_data(user_id, _id, message):
+    res = db.tasks.update_one({"worker": user_id, "state": 1, "_id": ObjectId(_id)}, {
+                              "$set": {"state": 2, "messages": message}})
     if res.raw_result["n"]:
         return True
     return False
 
-def reopen_task_data(user_id,_id):
-    res = db.tasks.update_one({"manager":(user_id),"state":2,"_id":ObjectId(_id)},{"$set":{"state":3}})
+
+def reopen_task_data(user_id, _id):
+    res = db.tasks.update_one(
+        {"manager": (user_id), "state": 2, "_id": ObjectId(_id)}, {"$set": {"state": 3}})
     if res.raw_result["n"]:
         return True
     return False
 
-def finish_task_data(user_id,_id):
-    res = db.tasks.update_one({"manager":(user_id),"state":2,"_id":ObjectId(_id)},{"$set":{"state":4}})
+
+def finish_task_data(user_id, _id):
+    res = db.tasks.update_one(
+        {"manager": (user_id), "state": 2, "_id": ObjectId(_id)}, {"$set": {"state": 4}})
+    worker = db.tasks.find_one({"_id":ObjectId(_id)},{"worker":1})["woker"]
+    db.users.update_one({"_id":ObjectId(worker)},{"$inc":{"mmr":35}})
     if res.raw_result["n"]:
         return True
     return False
-
 
 
 def get_users_position_data(deeded_postion):
-    res = list(db.users.find({"position":deeded_postion},{"_id":1,"username":1}))
+    res = list(db.users.find(
+        {"position": deeded_postion}, {"_id": 1, "username": 1}))
     for i in res:
         i["_id"] = str(i["_id"])
     return res
+
+
+def task_procces_check():
+    r = list(db.tasks.find({}))
+    for i in r:
+        date = i["date"]
+        now = datetime.now()
+        compare_date = datetime.strptime(date, "%m %d %Y %H:%M")
+        print(now)
+        print(compare_date)
+        if now < compare_date:
+            fine_proccess(i)
+
+
+def fine_proccess(data):
+    fine = int(data["fine"])
+    worker = data["worker"]
+    fine_type = "tenge"
+    if data["type"] == "MMR":
+        fine_type = "mmr"
+    db.users.update_many({"_id":ObjectId(worker)},
+                            [
+        {
+            "$set": {
+                f"{fine_type}": {
+                    "$max": [
+                        0,
+                        {
+                            "$subtract": [
+                                f"${fine_type}",
+                                fine
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    ])
+    db.tasks.delete_one({"_id":data["_id"]})
