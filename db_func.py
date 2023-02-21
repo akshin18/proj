@@ -202,7 +202,7 @@ def task_procces_check():
         compare_date = datetime.strptime(date, "%m %d %Y %H:%M")
         print(now)
         print(compare_date)
-        if now < compare_date:
+        if now > compare_date:
             fine_proccess(i)
 
 
