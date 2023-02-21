@@ -52,10 +52,13 @@ def add_task(title, content, worker, manager, fine, minute, hour, date, feedback
         state = 1
 
     for i in worker.split(","):
+        i = i.strip()
+        worker_username = db.users.find_one({"_id":ObjectId(i)},{"username":1})["username"]
         db.tasks.insert_one({
             "title": title,
             "content": content,
             "worker": i,
+            "worker_username":worker_username,
             "manager": manager,
             "fine": fine,
             "date": f"{date} {hour}:{minute}",
@@ -216,7 +219,7 @@ def fine_proccess(data):
                             [
         {
             "$set": {
-                f"{fine_type}": {
+                f"{fine_type}": {   
                     "$max": [
                         0,
                         {
