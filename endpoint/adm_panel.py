@@ -11,12 +11,20 @@ from db_func import create_user, add_news, get_news_from_db,delete_news_data
 
 
 
-@app.route("/get_statistic",methods=["GET"])
-def get_statistic():
-    data = list(db.channel.find({},{"_id":0}))
+@app.route("/get_admin_panel",methods=["GET"])
+def get_admin_panel():
+    data = db.adm_panel.find_one({},{"_id":0})
     response = jsonify({"status":1,"data":data})
     return response
 
 
+@app.route("/edit_admin_panel",methods=["POST"])
+def edit_admin_panel():
+    data = request.get_json()
+    key = list(data.keys())[0]
+    value = data[key]
+    db.adm_panel.update_one({},{"$set":{key:value}})
+    response = jsonify({"status":1,"message":"Succesfully updated"})
+    return response
 
 
