@@ -243,5 +243,27 @@ def delete_user_data(username):
     db.users.delete_one({"username":username})
     return True
 def create_user_data(username,pwd,title):
-    db.users.insert_one({"username":username,"pwd":pwd,"title":title})
+    now = datetime.now()
+    db.users.insert_one(
+        {
+        "username":username,
+        "pwd":pwd,
+        "title":title,
+    "first_name" : "",
+    "last_name" : "",
+    "middle_name" : "",
+    "birth_date" : "",
+    "email" : "",
+    "phone" : "",
+    "address" : "",
+    "position" : 3,
+    "mmr" : 0,
+    "ttk" : 0,
+    "tenge" : 0,
+    "session" : "",
+    "project" : "",
+    "created_time" : now,
+    "updated_time" : now
+        }
+        )
     return True
