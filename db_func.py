@@ -202,11 +202,14 @@ def task_procces_check():
     for i in r:
         date = i["date"]
         now = datetime.now()
-        compare_date = datetime.strptime(date, "%m %d %Y %H:%M")
-        # print(now)
-        # print(compare_date)
-        if now > compare_date:
-            fine_proccess(i)
+        try:
+            compare_date = datetime.strptime(date, "%m %d %Y %H:%M")
+            # print(now)
+            # print(compare_date)
+            if now > compare_date:
+                fine_proccess(i)
+        except:
+            pass
 
 
 def fine_proccess(data):
