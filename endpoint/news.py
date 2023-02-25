@@ -35,7 +35,7 @@ def post_news():
 def get_news():
     news = get_news_from_db()
     json_data_with_backslashes = json_util.dumps(news)
-    json_data = json.loads(json_data_with_backslashes)
+    json_data = json.loads(json_data_with_backslashes)[::-1]
     response = jsonify({"status": 1,"data":json_data})
     return response
 
