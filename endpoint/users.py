@@ -117,7 +117,7 @@ def delete_user():
 
 
 
-@app.route("/create_user",methods=["DELETE"])
+@app.route("/create_user",methods=["POST"])
 def create_user():
     json_data = request.get_json()
     token = request.headers["token"]
