@@ -234,3 +234,8 @@ def fine_proccess(data):
         }
     ])
     db.tasks.delete_one({"_id":data["_id"]})
+
+
+def delete_user_data(username):
+    db.users.delete_one({"username":username})
+    return True
