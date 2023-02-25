@@ -6,7 +6,7 @@ from flask_cors import cross_origin
 from app import app
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token,check_register_entity
-from db_func import create_user, get_users_data,update_profile_info, delete_user_data
+from db_func import create_user, get_users_data,update_profile_info, delete_user_data,create_user_data
 
 
 
@@ -109,6 +109,26 @@ def delete_user():
         res = delete_user_data(username)
         if res:
             response = jsonify({"status":1,"message":"Successfully updated"})
+            return response
+        response = jsonify({"status":0,"message":"Something worong during update"})
+        return response
+    return jsonify({"status":0}), 404
+
+
+
+
+@app.route("/create_user",methods=["DELETE"])
+def create_user():
+    json_data = request.get_json()
+    token = request.headers["token"]
+    data = validate_jwt_token(token)
+    if data and data["position"] < 3:
+        username = json_data["username"]
+        pwd = json_data["pwd"]
+        title = json_data["title"]
+        res = create_user_data(username,pwd,title)
+        if res:
+            response = jsonify({"status":1,"message":"Successfully Added"})
             return response
         response = jsonify({"status":0,"message":"Something worong during update"})
         return response

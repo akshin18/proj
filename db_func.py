@@ -242,3 +242,6 @@ def fine_proccess(data):
 def delete_user_data(username):
     db.users.delete_one({"username":username})
     return True
+def create_user_data(username,pwd,title):
+    db.users.insert_one({"username":username,"pwd":pwd,"title":title})
+    return True
