@@ -132,7 +132,7 @@ def buy_market_data(_id, user):
     ttk = db.market.find_one({"_id": ObjectId(_id)}, {
                              "price": 1, "_id": 0})["price"]
     res = db.users.update_one({"username": user["username"], "ttk": {
-                              "$gte": ttk}}, {"$inc": {"ttk": -int(ttk)}})
+                              "$gte": int(ttk)}}, {"$inc": {"ttk": -int(ttk)}})
     if res.raw_result["n"]:
         create_order(_id, user["username"], code)
         return code
