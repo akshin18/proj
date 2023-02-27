@@ -39,7 +39,8 @@ def get_total_posts(channel,channel_id):
     response = channel.get("totalPosts",channel_id)
     return response
 def get_recent_subscriber_count(channel,channel_id):
-    response = channel.get("recentSubscriberCount",channel_id)
+    # response = channel.get("recentSubscriberCount",channel_id)
+    response = channel.get("todaySubscribers",channel_id)
     return response
 def get_joined_by_date(channel,channel_id):
     response = channel.get("getJoinedByDate",channel_id)
@@ -51,6 +52,8 @@ def get_left_by_date(channel,channel_id):
 def main_schedule():
     channel = Channel()
     data = get_channels(channel)
+    channels = [x["channelId"] for x in data]
+    db.channel.delete_many({"channel_id":{"$nin":channels}})
     for i in data:
         channel_id = i["channelId"]
         channel_name = i["channelName"]
@@ -62,8 +65,8 @@ def main_schedule():
         joined_by_date = get_joined_by_date(channel,channel_id)
         left_by_date = get_left_by_date(channel,channel_id)
         left_join_stat = []
-        for i,j in zip(joined_by_date,left_by_date):
-            left_join_stat.append({"time":i["time"],"join":i["value"],"left":j["value"]})
+        for i,j,z in zip(joined_by_date,left_by_date,recent_sub_count):
+            left_join_stat.append({"time":i["time"],"join":i["value"],"left":j["value"],"subscribers":z["subscribers"]})
         
         container = {
             "channel_id":channel_id,
@@ -71,7 +74,6 @@ def main_schedule():
             "sub_count":sub_count,
             "aud_gender":aud_gender,
             "total_posts":total_posts,
-            "recent_sub_count":recent_sub_count,
             "left_join_stat":left_join_stat,
         
         }
