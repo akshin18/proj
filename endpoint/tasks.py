@@ -7,7 +7,7 @@ import json
 
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
-from db_func import add_task, get_task_data, confirm_task_data, complate_task_data, reopen_task_data, finish_task_data, get_users_position_data
+from db_func import add_task, get_task_data, confirm_task_data, complate_task_data, reopen_task_data, finish_task_data, get_users_position_data,  delete_task_data
 
 
 #"
@@ -119,3 +119,15 @@ def get_workers():
         return response
     response = jsonify({"status":0,"message":"You do not have permission"})
     return response
+
+
+
+
+@app.route("/delete_task",methods=["DELETE"])
+def delete_task():
+    data = request.get_json()
+    if _id := data.get("_id"):
+        data = delete_task_data(_id)
+        response = jsonify({"status":1,"data":data})
+        return response
+    return jsonify({"status":0,"message":"Does not exists main keys"}),400

@@ -125,6 +125,9 @@ def add_market_data(image_url, name, price, content):
 def delete_market_data(_id):
     db.market.delete_one({"_id": ObjectId(f"{_id}")})
     return True
+def delete_task_data(_id):
+    db.market.delete_one({"_id": ObjectId(f"{_id}")})
+    return True
 
 
 def buy_market_data(_id, user):
