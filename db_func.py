@@ -182,8 +182,9 @@ def reopen_task_data(user_id, _id):
 def finish_task_data(user_id, _id):
     res = db.tasks.update_one(
         {"manager": (user_id), "state": 2, "_id": ObjectId(_id)}, {"$set": {"state": 4}})
-    worker = db.tasks.find_one({"_id":ObjectId(_id)},{"worker":1})["woker"]
+    worker = db.tasks.find_one({"_id":ObjectId(_id)},{"worker":1})["worker"]
     db.users.update_one({"_id":ObjectId(worker)},{"$inc":{"mmr":35}})
+    print(res.raw_result)
     if res.raw_result["n"]:
         return True
     return False
