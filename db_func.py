@@ -126,7 +126,7 @@ def delete_market_data(_id):
     db.market.delete_one({"_id": ObjectId(f"{_id}")})
     return True
 def delete_task_data(_id):
-    db.market.delete_one({"_id": ObjectId(f"{_id}")})
+    db.tasks.delete_one({"_id": ObjectId(f"{_id}")})
     return True
 
 
