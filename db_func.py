@@ -81,7 +81,7 @@ def get_news_from_db():
 
 
 def get_users_data():
-    data = list(db.users.find({"position":{"gt":1}}, {"_id": 0, "updated_time": 0}))
+    data = list(db.users.find({"position":{"$gt":1}}, {"_id": 0, "updated_time": 0}))
     return data
 
 
