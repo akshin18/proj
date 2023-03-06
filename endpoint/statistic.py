@@ -19,14 +19,11 @@ def get_statistic():
         data["date"] = datetime.now().strftime("%d.%m")
         all_join = 0
         all_left = 0
-        all_subscribers = 0
         for i in data["left_join_stat"]:
             all_join += i["join"]
             all_left += i["left"]
-            all_subscribers += i["subscribers"]
         data["all_join"] = all_join
         data["all_left"] = all_left
-        data["all_subscribers"] = all_subscribers
     response = jsonify({"status":1,"data":datas})
     return response
 
