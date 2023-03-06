@@ -100,6 +100,18 @@ def get_market_data():
         i["_id"] = str(i["_id"])
     return data
 
+def get_orders_data():
+    data = list(db.orders.find({}))
+    for i in data:
+        i["_id"] = str(i["_id"])
+        name_data = db.users.find_one({"username":i["username"]},{"first_name":1,"last_name":1,"middle_name":1})
+        name = name_data["first_name"]+"" + name_data["last_name"]+"" + name_data["middle_name"]
+        stuff_name = db.market.find_one({"_id":i["stuff_id"]},{"name":1})["name"]
+        i["name"] = name
+        i["stuff_name"] = stuff_name
+        i["stuff_id"] = str(i["stuff_id"])
+    return data
+
 
 def delete_news_data(_id):
     db.news.delete_one({"_id": ObjectId(f"{_id}")})
