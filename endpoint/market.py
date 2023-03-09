@@ -1,7 +1,7 @@
 from app import app
 from flask import request,jsonify
 from add_func import check_register_entity
-from db_func import get_market_data, add_market_data, delete_market_data, buy_market_data, get_orders_data
+from db_func import get_market_data, add_market_data, delete_market_data, buy_market_data, get_orders_data, accept_order_data
 from flask_cors import cross_origin
 
 from config import db, PROJ_STATE
@@ -22,6 +22,16 @@ def get_orders():
     print(data)
     response = jsonify({"status":1,"data":data})
     return response
+
+@app.route("/accept_order",methods=["POST"])
+def accept_order():
+    data = request.get_json()
+    _id = data["_id"]
+    accept_order_data(_id)
+    response = jsonify({"status":1})
+    return response
+
+
 
 
 @app.route("/add_market",methods=["POST"])

@@ -112,6 +112,8 @@ def get_orders_data():
         i["stuff_id"] = str(i["stuff_id"])
     return data
 
+def accept_order_data(_id):
+    db.orders.update_one({"_id":ObjectId(_id)},{"$set":{"complated":1}})
 
 def delete_news_data(_id):
     db.news.delete_one({"_id": ObjectId(f"{_id}")})
