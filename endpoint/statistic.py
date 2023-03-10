@@ -18,7 +18,7 @@ def get_statistic():
     user = validate_jwt_token(token)
     position = user.get("position")
     filter = {}
-    if position  != 3:
+    if position  == 3:
         filter = {"channel_id":user.get("channel_id")}
     datas = list(db.channel.find(filter,{"_id":0}))
     for data in datas:

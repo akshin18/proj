@@ -89,7 +89,6 @@ def main_schedule():
     db.channel.delete_many({"channel_id":{"$nin":channels}})
     now = int(datetime.now().timestamp())
     res = requests.get(f"http://146.0.78.143:5355/api/v1/statistics/tickets/time?projectId=bdac4609-9138-478e-9951-64038ce2fbab&date={now}",headers={"ApiKey":"q8B67Lh7hj2Ou"}).json()
-    print("Start")
     for i in data:
         channel_id = i["channelId"]
         channel_name = i["channelName"]
