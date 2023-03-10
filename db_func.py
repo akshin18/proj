@@ -104,7 +104,7 @@ def get_orders_data():
     data = list(db.orders.find({}))
     for i in data:
         i["_id"] = str(i["_id"])
-        name_data = db.users.find_one({"username":i["username"]},{"first_name":1,"last_name":1,"middle_name":1})
+        name_data = db.users.find_one({"_id":ObjectId(i["user_id"])},{"first_name":1,"last_name":1,"middle_name":1})
         name = name_data["first_name"]+"" + name_data["last_name"]+"" + name_data["middle_name"]
         stuff_name = db.market.find_one({"_id":i["stuff_id"]},{"name":1})["name"]
         i["name"] = name
@@ -151,13 +151,13 @@ def buy_market_data(_id, user):
     res = db.users.update_one({"username": user["username"], "ttk": {
                               "$gte": int(ttk)}}, {"$inc": {"ttk": -int(ttk)}})
     if res.raw_result["n"]:
-        create_order(_id, user["username"], code)
+        create_order(_id, user["_id"], code)
         return code
     return None
 
 
-def create_order(stuff_if, username, code):
-    db.orders.insert_one({"username": username, "stuff_id": ObjectId(
+def create_order(stuff_if, user_id, code):
+    db.orders.insert_one({"user_id": user_id, "stuff_id": ObjectId(
         stuff_if), "complated": 0, "code": code})
 
 

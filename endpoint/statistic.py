@@ -24,6 +24,7 @@ def get_statistic():
             all_left += i["left"]
         data["all_join"] = all_join
         data["all_left"] = all_left
+        data["percen"] = round(((data["sub_count"]/data["left_join_stat"][0])-1)*100,2)
     response = jsonify({"status":1,"data":datas})
     return response
 

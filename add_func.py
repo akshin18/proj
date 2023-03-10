@@ -122,3 +122,5 @@ def generate_code():
     list_of_elements = list(string.ascii_letters+string.digits)
     random.shuffle(list_of_elements)
     return "".join(list_of_elements[:15])
+
+

@@ -53,13 +53,30 @@ def get_ref_and_dep(channel_id):
     data = datetime.now().strftime("%Y-%m-%d")
     api_key = get_key_for_statistic(channel_id)
     if api_key:
-        res = requests.get(f"http://pin-up.partners/api/{api_key}/statisticGeneral?from={data}&to={data}").json()["data"][0]
-        reg,dep = res["registration"],res["firstDepToReg"]
-        return reg,dep
+        try:
+            res = requests.get(f"http://pin-up.partners/api/{api_key}/statisticGeneral?from={data}&to={data}").json()["data"][0]
+            reg,dep = res["registration"],res["firstDepToReg"]
+            return reg,dep
+        except:
+            return None,None
+    return None,None
+def get_ref_and_dep(channel_id):
+    data = datetime.now().strftime("%Y-%m-%d")
+    api_key = get_key_for_statistic(channel_id)
+    if api_key:
+        try:
+            res = requests.get(f"http://pin-up.partners/api/{api_key}/statisticGeneral?from={data}&to={data}").json()["data"][0]
+            reg,dep = res["registration"],res["firstDepToReg"]
+            return reg,dep
+        except:
+            return None,None
     return None,None
 def get_key_for_statistic(channel_id):
-    res = db.channel.find_one({"channel_id":channel_id},{"api":1}).get("api",None)
-    return res
+    try:
+        res = db.channel.find_one({"channel_id":channel_id},{"api":1}).get("api",None)
+        return res
+    except:
+        return None
 def check_data_appear(channel_id,channel_name):
     res = db.channel.find_one({"channel_id":channel_id})
     if not res:
@@ -73,6 +90,8 @@ def main_schedule():
     data = get_channels(channel)
     channels = [x["channelId"] for x in data]
     db.channel.delete_many({"channel_id":{"$nin":channels}})
+    res = requests.get("http://146.0.78.143:5355/api/v1/statistics/tickets/time?projectId=bdac4609-9138-478e-9951-64038ce2fbab&date=1678408294",headers={"ApiKey":"q8B67Lh7hj2Ou"}).json()
+
     for i in data:
         channel_id = i["channelId"]
         channel_name = i["channelName"]
@@ -85,8 +104,12 @@ def main_schedule():
         left_by_date = get_left_by_date(channel,channel_id)
         left_join_stat = []
         reg,dep = get_ref_and_dep(channel_id)
-        for i,j,z in zip(joined_by_date,left_by_date,recent_sub_count):
-            left_join_stat.append({"time":i["time"],"join":i["value"],"left":j["value"],"subscribers":z["subscribers"]})
+        all_ticket = 0
+        all_reply_time = 0
+        for i,j,z,q in zip(joined_by_date,left_by_date,recent_sub_count,res):
+            all_ticket += q["chatCount"]
+            all_reply_time += q["averageSeconds"]
+            left_join_stat.append({"time":i["time"],"join":i["value"],"left":j["value"],"subscribers":z["subscribers"],"ticket":q["chatCount"],"reply_time":q["averageSeconds"]})
         
         container = {
             "channel_id":channel_id,
@@ -96,11 +119,30 @@ def main_schedule():
             "total_posts":total_posts,
             "left_join_stat":left_join_stat,
             "reg":reg,
-            "dep":dep
+            "dep":dep,
+            "all_ticket":all_ticket,
+            "all_reply_time":all_reply_time
         
         }
         db.channel.update_one({"channel_id":channel_id},{"$set":container})
 
 
+def salary_counter():
+    users = db.users.find({"position":{"$ne":1}})
+    salary = db.adm_panel.find({})[0]
+    for i in users:
+        title = i["title"]
+        _,dps = get_ref_and_dep(i.get("channel_id",""))
+        sal = salary.get(title,None)
+        print(sal,dps,i.get("channel_id",""))
+        if sal and dps:
+            print("good")
+            db.users.update_one({"username":i["username"]},{"$inc":{"tenge":int(((int(dps)**2)+int(sal))/int(salary["kpi"]))}})
+
+
+
+
+
 if __name__ == "__main__":
     main_schedule()
+    # salary_counter()
