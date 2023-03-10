@@ -1,6 +1,6 @@
 import requests
 from config import db, PROJ_STATE
-from datetime import datetime
+from datetime import datetime, timedelta
 from db_func import loger_set
     
 class Channel:
@@ -51,27 +51,22 @@ def get_left_by_date(channel,channel_id):
     response = channel.get("getLeftByDate",channel_id)
     return response
 def get_ref_and_dep(channel_id):
-    data = datetime.now().strftime("%Y-%m-%d")
+    data_from = datetime.now()
     api_key = get_key_for_statistic(channel_id)
     if api_key:
         try:
-            res = requests.get(f"http://pin-up.partners/api/{api_key}/statisticGeneral?from={data}&to={data}").json()["data"][0]
-            reg,dep = res["registration"],res["firstDepToReg"]
-            return reg,dep
-        except:
-            return None,None
-    return None,None
-def get_ref_and_dep(channel_id):
-    data = datetime.now().strftime("%Y-%m-%d")
-    api_key = get_key_for_statistic(channel_id)
-    if api_key:
-        try:
-            res = requests.get(f"http://pin-up.partners/api/{api_key}/statisticGeneral?from={data}&to={data}").json()["data"][0]
-            reg,dep = res["registration"],res["firstDepositCount"]
-            return reg,dep
-        except:
-            return None,None
-    return None,None
+            data_to = (data_from - timedelta(days=14)).strftime("%Y-%m-%d")
+            data_from = data_from.strftime("%Y-%m-%d")
+            res = requests.get(f"http://pin-up.partners/api/{api_key}/statisticGeneral?from={data_to}&to={data_from}").json()["data"]
+            reg,dep = res[0]["registration"],res[0]["firstDepositCount"]
+            one_week_depo = sum([x["firstDepositCount"] for x in res[:7]])
+            two_week_depo = sum([x["firstDepositCount"] for x in res])
+            two_week_reg = sum([x["registration"] for x in res])
+            return reg,dep,one_week_depo,two_week_depo,two_week_reg
+        except Exception as e:
+            print(e)
+            return None,None,None,None,None
+    return None,None,None,None,None
 def get_key_for_statistic(channel_id):
     try:
         res = db.channel.find_one({"channel_id":channel_id},{"api":1}).get("api",None)
@@ -106,7 +101,7 @@ def main_schedule():
         joined_by_date = get_joined_by_date(channel,channel_id)
         left_by_date = get_left_by_date(channel,channel_id)
         left_join_stat = []
-        reg,dep = get_ref_and_dep(channel_id)
+        reg,dep,one_week,two_week,two_week_reg = get_ref_and_dep(channel_id)
         all_ticket = 0
         all_reply_time = 0
         for i,j,z,q in zip(joined_by_date,left_by_date,recent_sub_count,res):
@@ -124,7 +119,10 @@ def main_schedule():
             "reg":reg,
             "dep":dep,
             "all_ticket":all_ticket,
-            "all_reply_time":all_reply_time
+            "all_reply_time":all_reply_time,
+            "one_week_dep":one_week,
+            "two_week_dep":two_week,
+            "two_week_reg":two_week_reg
         
         }
         db.channel.update_one({"channel_id":channel_id},{"$set":container})
@@ -136,7 +134,7 @@ def salary_counter():
     salary = db.adm_panel.find({})[0]
     for i in users:
         title = i["title"]
-        _,dps = get_ref_and_dep(i.get("channel_id",""))
+        _,dps,_,_,_ = get_ref_and_dep(i.get("channel_id",""))
         sal = salary.get(title,None)
         print(sal,dps,i.get("channel_id",""))
         if sal and dps:
