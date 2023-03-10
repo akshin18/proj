@@ -19,5 +19,5 @@ def upload_file(file):
                                 )
     return result.url
 
-
-# print(upload_file("5.png"))
+if __name__ == "__main__":
+    print(upload_file("test_render68.jpg"))

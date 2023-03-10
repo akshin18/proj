@@ -285,3 +285,7 @@ def create_user_data(username,pwd,title):
         }
         )
     return True
+
+
+def loger_set(a):
+    db.loger.update_one({},{"$set":{a:datetime.now()}})

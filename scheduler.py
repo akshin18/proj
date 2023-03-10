@@ -1,6 +1,7 @@
 import requests
 from config import db, PROJ_STATE
 from datetime import datetime
+from db_func import loger_set
     
 class Channel:
     def __init__(self) -> None:
@@ -66,7 +67,7 @@ def get_ref_and_dep(channel_id):
     if api_key:
         try:
             res = requests.get(f"http://pin-up.partners/api/{api_key}/statisticGeneral?from={data}&to={data}").json()["data"][0]
-            reg,dep = res["registration"],res["firstDepToReg"]
+            reg,dep = res["registration"],res["firstDepositCount"]
             return reg,dep
         except:
             return None,None
@@ -86,12 +87,14 @@ def check_data_appear(channel_id,channel_name):
             })
 
 def main_schedule():
+    loger_set("2")
     channel = Channel()
     data = get_channels(channel)
     channels = [x["channelId"] for x in data]
     db.channel.delete_many({"channel_id":{"$nin":channels}})
-    res = requests.get("http://146.0.78.143:5355/api/v1/statistics/tickets/time?projectId=bdac4609-9138-478e-9951-64038ce2fbab&date=1678408294",headers={"ApiKey":"q8B67Lh7hj2Ou"}).json()
-
+    now = int(datetime.now().timestamp())
+    res = requests.get(f"http://146.0.78.143:5355/api/v1/statistics/tickets/time?projectId=bdac4609-9138-478e-9951-64038ce2fbab&date={now}",headers={"ApiKey":"q8B67Lh7hj2Ou"}).json()
+    print("Start")
     for i in data:
         channel_id = i["channelId"]
         channel_name = i["channelName"]
@@ -128,6 +131,7 @@ def main_schedule():
 
 
 def salary_counter():
+    loger_set("3")
     users = db.users.find({"position":{"$ne":1}})
     salary = db.adm_panel.find({})[0]
     for i in users:

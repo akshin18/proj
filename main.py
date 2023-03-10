@@ -1,9 +1,10 @@
 from app import app,sched
 from endpoint import users,news,market,test,tasks,adm_panel,statistic
-from db_func import task_procces_check
+from db_func import task_procces_check,loger_set
 from scheduler import main_schedule, salary_counter
 
 def task_checker():
+    loger_set("1")
     task_procces_check()
 
 if __name__ == "__main__":
