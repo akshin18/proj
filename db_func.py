@@ -254,7 +254,7 @@ def fine_proccess(data):
             }
         }
     ])
-    db.tasks.delete_one({"_id":data["_id"]})
+    db.tasks.update_one({"_id":data["_id"]},{"$set":5})
 
 
 def delete_user_data(username):
