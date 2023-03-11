@@ -253,7 +253,8 @@ def fine_proccess(data):
         }
     ])
     db.tasks.update_one({"_id":data["_id"]},{"$set":{"state":5}})
-    db.notifications.insert_one({"worker":ObjectId(worker),"message":f"Пропущенный Дедлайн штраф {fine}"})
+    now = datetime.now().strftime("%d.%m.%Y %H:%M")
+    db.notifications.insert_one({"worker":ObjectId(worker),"message":f"Пропущенный Дедлайн","value":-int(fine),"currency":fine_type,"date":now})
 
 
 def delete_user_data(username):
