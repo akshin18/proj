@@ -291,4 +291,5 @@ def loger_set(a):
 
 
 def get_notifications_data(user_id):
-    db.notifications.find({"worker":ObjectId(user_id)},{"_id":0,"message":1})
+    res = list(db.notifications.find({"worker":ObjectId(user_id)},{"_id":0,"message":1}))
+    return res
