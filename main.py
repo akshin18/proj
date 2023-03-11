@@ -2,6 +2,11 @@ from app import app,sched
 from endpoint import users,news,market,test,tasks,adm_panel,statistic,leaderboard
 from db_func import task_procces_check,loger_set
 from scheduler import main_schedule, salary_counter
+import sys,os,time
+
+if sys.platform != "win32":
+    os.environ['TZ'] = 'Asia/Almaty' # set new timezone
+    time.tzset()
 
 def task_checker():
     loger_set("1")
