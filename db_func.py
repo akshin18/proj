@@ -255,6 +255,7 @@ def fine_proccess(data):
         }
     ])
     db.tasks.update_one({"_id":data["_id"]},{"$set":{"state":5}})
+    db.notifications.insert_one({"worker":ObjectId(worker),"message":f"Пропущенный Дедлайн штраф {fine}"})
 
 
 def delete_user_data(username):
@@ -289,3 +290,7 @@ def create_user_data(username,pwd,title):
 
 def loger_set(a):
     db.loger.update_one({},{"$set":{a:datetime.now()}})
+
+
+def get_notifications_data(user_id):
+    db.notifications.find({"worker":ObjectId(user_id)},{"_id":0,"message":1})
