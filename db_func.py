@@ -216,7 +216,7 @@ def get_users_position_data(deeded_postion):
 
 
 def task_procces_check():
-    r = list(db.tasks.find({"state":1}))
+    r = list(db.tasks.find({"state":{"$lt":4}}))
     for i in r:
         date = i["date"]
         now = datetime.now()
