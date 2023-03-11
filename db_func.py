@@ -216,14 +216,12 @@ def get_users_position_data(deeded_postion):
 
 
 def task_procces_check():
-    r = list(db.tasks.find({}))
+    r = list(db.tasks.find({"state":1}))
     for i in r:
         date = i["date"]
         now = datetime.now()
         try:
             compare_date = datetime.strptime(date, "%m %d %Y %H:%M")
-            # print(now)
-            # print(compare_date)
             if now > compare_date:
                 fine_proccess(i)
         except:
