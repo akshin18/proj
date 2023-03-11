@@ -13,7 +13,7 @@ from db_func import create_user, add_news, get_news_from_db,delete_news_data
 
 
 @app.route("/get_leaderboard",methods=["GET"])
-def get_statistic():
+def get_leaderboard():
     key = request.args.get("key",None)
     if not key :
         key = "dep"
@@ -21,6 +21,14 @@ def get_statistic():
     for data in datas:
         data["date"] = datetime.now().strftime("%d.%m")
         data["percen"] = round(((data["sub_count"]/data["left_join_stat"][0]["subscribers"])-1)*100,2)
+    response = jsonify({"status":1,"data":datas})
+    return response
+
+
+
+@app.route("/get_leaderboard_users",methods=["GET"])
+def get_leaderboard_users():
+    datas = list(db.users.find({},{"_id":0,"image":1,"mmr":1}).sort( { "mmr": -1 } ))
     response = jsonify({"status":1,"data":datas})
     return response
 
