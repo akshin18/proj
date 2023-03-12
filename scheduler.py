@@ -151,7 +151,7 @@ def count_rang():
         if count_rang > current_rang:
             while count_rang > current_rang:
                 current_rang += 1
-                db.users.update_one({"_id":i["_id"]},{"$inc":{"ttk":1250},"$set":{"rand":current_rang}})
+                db.users.update_one({"_id":i["_id"]},{"$inc":{"ttk":1250},"$set":{"rang":current_rang}})
     loger_set("4")
 
 

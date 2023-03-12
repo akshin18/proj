@@ -77,11 +77,11 @@ def get_progile_info():
     token = request.headers["token"]
     data = validate_jwt_token(token)
     if data:
-        range = data.get("range",0)
+        rang = data.get("rang",0)
         reminder = round((data["mmr"] % 150) / 150,2) *100
-        from_mmr = range * 150
+        from_mmr = rang * 150
         to_mmr = from_mmr + 150 
-        data["range"] = range
+        data["rang"] = rang
         data["reminder"] = reminder
         data["from_mmr"] = from_mmr
         data["to_mmr"] = to_mmr
