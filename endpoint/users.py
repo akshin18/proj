@@ -77,6 +77,14 @@ def get_progile_info():
     token = request.headers["token"]
     data = validate_jwt_token(token)
     if data:
+        range = data.get("range",0)
+        reminder = round((data["mmr"] % 150) / 150,2) *100
+        from_mmr = range * 150
+        to_mmr = from_mmr + 150 
+        data["range"] = range
+        data["reminder"] = reminder
+        data["from_mmr"] = from_mmr
+        data["to_mmr"] = to_mmr
         response = jsonify({"status":1,"data":data})
         return response
     return jsonify({"status":0}), 403

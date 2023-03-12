@@ -2,6 +2,7 @@ import requests
 from config import db, PROJ_STATE
 from datetime import datetime, timedelta
 from db_func import loger_set
+from bson import ObjectId
     
 class Channel:
     def __init__(self) -> None:
@@ -141,7 +142,17 @@ def salary_counter():
             db.users.update_one({"username":i["username"]},{"$inc":{"tenge":int(((int(dps)**2)+int(sal))/int(salary["kpi"]))}})
 
 
-
+def count_rang():
+    res = db.users.find({})
+    for i in res:
+        mmr = i["mmr"]
+        current_rang = i.get("rang",0)
+        count_rang = mmr // 150
+        if count_rang > current_rang:
+            while count_rang > current_rang:
+                current_rang += 1
+                db.users.update_one({"_id":i["_id"]},{"$inc":{"ttk":1250},"$set":{"rand":current_rang}})
+    loger_set("4")
 
 
 if __name__ == "__main__":
