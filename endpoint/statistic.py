@@ -9,7 +9,7 @@ from datetime import datetime
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
 from db_func import create_user, add_news, get_news_from_db,delete_news_data
-
+from cdn import upload_file
 
 
 @app.route("/get_statistic",methods=["GET"])
@@ -38,3 +38,13 @@ def get_statistic():
 
 
 
+@app.route("/add_project_image",methods=["POST"])
+def add_project_image():
+    if file := request.files.get("Image",None):
+        file.save("middle.png")
+    else:
+        return jsonify({"status":0,"message":"Does not exists image"}),400
+    image_url = upload_file("middle.png")
+    channel_id = request.form.get("channel_id",None)
+    db.channels.update_one({"channel_id":channel_id},{"$set":{"image":image_url}})
+    return jsonify({"status":1,"message":"ok"})
