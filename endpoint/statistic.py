@@ -46,5 +46,5 @@ def add_project_image():
         return jsonify({"status":0,"message":"Does not exists image"}),400
     image_url = upload_file("middle.png")
     channel_id = request.form.get("channel_id",None)
-    db.channels.update_one({"channel_id":channel_id},{"$set":{"image":image_url}})
+    db.channel.update_one({"channel_id":channel_id},{"$set":{"image":image_url}})
     return jsonify({"status":1,"message":"ok"})
