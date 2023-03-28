@@ -209,10 +209,14 @@ def finish_task_data(user_id, _id):
     return False
 
 
-def get_users_position_data(needed_postion,title=None):
+def get_users_position_data(needed_postion,title:str=None):
     if needed_postion == 3:
-        res = list(db.users.find(
-            {"position": needed_postion,"title":title}, {"_id": 1, "username": 1}))
+        if title.startswith("treat"):
+            res = list(db.users.find(
+            {"position": needed_postion,"title":{"$in":["trat_1","trat_2","trat_3"]}}, {"_id": 1, "username": 1}))
+        else:
+            res = list(db.users.find(
+                {"position": needed_postion,"title":title}, {"_id": 1, "username": 1}))
     else:
         res = list(db.users.find(
             {"position": needed_postion}, {"_id": 1, "username": 1}))
@@ -282,7 +286,7 @@ def create_user_data(username,pwd,title,position):
     "email" : "",
     "phone" : "",
     "address" : "",
-    "position" : position,
+    "position" : int(position),
     "mmr" : 0,
     "ttk" : 0,
     "tenge" : 0,
