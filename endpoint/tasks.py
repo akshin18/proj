@@ -75,7 +75,7 @@ def finish_task():
 def get_task():
     # Get the username and password from the request body
     token = request.headers.get("token")
-    user = validate_jwt_token(token)
+    user = validate_jwt_token(token)    
     work_data,manage_data = get_task_data(user["_id"])
     if work_data == []:
         work_data = [{}]
@@ -111,10 +111,11 @@ def post_task():
 @app.route("/get_workers",methods=["GET"])
 def get_workers():
     token = request.headers.get("token")
-    position = validate_jwt_token(token).get("position")
+    user = validate_jwt_token(token)
+    position = user.get("position")
     if position <= 2:
-        deeded_postion = position + 1
-        data = get_users_position_data(deeded_postion)
+        needed_postion = position + 1
+        data = get_users_position_data(needed_postion,title=user["title"])
         response = jsonify({"status":1,"data":data})
         return response
     response = jsonify({"status":0,"message":"You do not have permission"})

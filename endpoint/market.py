@@ -32,8 +32,6 @@ def accept_order():
     return response
 
 
-
-
 @app.route("/add_market",methods=["POST"])
 def add_market():
     if file := request.files.get("Image",None):

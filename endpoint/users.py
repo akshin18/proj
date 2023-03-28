@@ -38,7 +38,7 @@ def register():
     if not check_fields:
         response = jsonify({"status":0,"message":"Necessery field is not exists"}), 400
         return response
-    create_user(data)
+    create_user_data(data)
     response = jsonify({"status":1,"message":"Successfully registered"}), 200
     return response
     
@@ -134,7 +134,8 @@ def create_user():
         username = json_data["username"]
         pwd = json_data["pwd"]
         title = json_data["title"]
-        res = create_user_data(username,pwd,title)
+        position = json_data.get("position",3)
+        res = create_user_data(username,pwd,title,position)
         if res:
             response = jsonify({"status":1,"message":"Successfully Added"})
             return response

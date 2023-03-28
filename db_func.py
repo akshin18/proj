@@ -32,7 +32,7 @@ def create_user(data):
     return True
 
 
-def add_news(title, text, color, hashtag):
+def add_news(title, text, color, hashtag,image_url):
     db.news.insert_one({
         "title": title,
         "text": text,
@@ -40,6 +40,7 @@ def add_news(title, text, color, hashtag):
         "hashtag": hashtag,
         "time": datetime.now().strftime("%H:%M"),
         "date": datetime.now().strftime("%d.%m"),
+        "image_url":image_url
     })
     return True
 
@@ -138,6 +139,7 @@ def add_market_data(image_url, name, price, content):
 
 def delete_market_data(_id):
     db.market.delete_one({"_id": ObjectId(f"{_id}")})
+    db.orders.delete_many({"stuff_id": ObjectId(f"{_id}")})
     return True
 def delete_task_data(_id):
     db.tasks.delete_one({"_id": ObjectId(f"{_id}")})
@@ -161,7 +163,7 @@ def create_order(stuff_if, user_id, code):
         stuff_if), "complated": 0, "code": code})
 
 
-def get_task_data(user_id):
+def get_task_data(user_id,title=None):
     work = list(db.tasks.find({"worker": user_id}, {"created_time": 0}))
     manage = list(db.tasks.find({"manager": (user_id)}, {"created_time": 0}))
     for i in work:
@@ -207,9 +209,13 @@ def finish_task_data(user_id, _id):
     return False
 
 
-def get_users_position_data(deeded_postion):
-    res = list(db.users.find(
-        {"position": deeded_postion}, {"_id": 1, "username": 1}))
+def get_users_position_data(needed_postion,title=None):
+    if needed_postion == 3:
+        res = list(db.users.find(
+            {"position": needed_postion,"title":title}, {"_id": 1, "username": 1}))
+    else:
+        res = list(db.users.find(
+            {"position": needed_postion}, {"_id": 1, "username": 1}))
     for i in res:
         i["_id"] = str(i["_id"])
     return res
@@ -260,7 +266,9 @@ def fine_proccess(data):
 def delete_user_data(username):
     db.users.delete_one({"username":username})
     return True
-def create_user_data(username,pwd,title):
+
+
+def create_user_data(username,pwd,title,position):
     now = datetime.now()
     db.users.insert_one(
         {
@@ -274,7 +282,7 @@ def create_user_data(username,pwd,title):
     "email" : "",
     "phone" : "",
     "address" : "",
-    "position" : 3,
+    "position" : position,
     "mmr" : 0,
     "ttk" : 0,
     "tenge" : 0,
