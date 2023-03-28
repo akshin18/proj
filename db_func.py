@@ -306,3 +306,14 @@ def loger_set(a):
 def get_notifications_data(user_id):
     res = list(db.notifications.find({"worker":ObjectId(user_id)},{"_id":0,"worker":0}))
     return res
+
+
+def add_dep_reg_data(date,dep,reg,channel_id):
+    timestamp = int(datetime.strptime(date,"%d.%m.%Y").timestamp()) + 100
+    db.dep_reg.insert_one({"date":date,"dep":dep,"reg":reg,"channel_id":channel_id,"timestamp":timestamp})
+
+def get_dep_reg_data(channel_id,date):
+    res = db.dep_reg.find_one({"channel_id":channel_id,"date":date},{"reg":1,"dep":1})
+    if not res:
+        return 0,0
+    return res["reg"],res["dep"]

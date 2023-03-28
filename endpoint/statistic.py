@@ -8,7 +8,7 @@ from datetime import datetime
 
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
-from db_func import create_user, add_news, get_news_from_db,delete_news_data
+from db_func import add_dep_reg_data,get_dep_reg_data
 from cdn import upload_file
 
 
@@ -25,18 +25,36 @@ def get_statistic():
         data["date"] = datetime.now().strftime("%d.%m")
         all_join = 0
         all_left = 0
+        date = datetime.now().strftime("%d.%m.%Y")
+        dep,reg = get_dep_reg_data(data["channel_id"],date)
         for i in data["left_join_stat"]:
             all_join += i["join"]
             all_left += i["left"]
+        data["dep"] = dep
+        data["reg"] = reg
         data["all_join"] = all_join
         data["all_left"] = all_left
-        print(data["left_join_stat"][0])
         data["percen"] = round(((data["sub_count"]/data["left_join_stat"][0]["subscribers"])-1)*100,2)
     response = jsonify({"status":1,"data":datas})
     return response
 
 
-
+@app.route("/add_dep_reg",methods=["POST"])
+def add_dep_reg():
+    token = request.headers.get("token")
+    user = validate_jwt_token(token)
+    position = user.get("position")
+    data = request.get_json()
+    if position  != 1:
+        response = jsonify({"status":0,"message":"Error"}),404
+        return response
+    date = data["date"]
+    dep = data["dep"]
+    reg = data["reg"]
+    channel_id = data["channel_id"]
+    add_dep_reg_data(date,dep,reg,channel_id)
+    response = jsonify({"status":1,"data":"Sucessfully"})
+    return response
 
 @app.route("/add_project_image",methods=["POST"])
 def add_project_image():
