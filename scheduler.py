@@ -80,6 +80,7 @@ def check_data_appear(channel_id,channel_name):
             })
 
 def main_schedule():
+    print("2")
     loger_set("2")
     channel = Channel()
     data = get_channels(channel)
