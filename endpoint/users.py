@@ -53,7 +53,7 @@ def login():
         return jsonify({"status":0,"message":"Wrong creditales"})
 
     # Check if the username and password are correct
-    data = db.users.find_one({"username": username, "pwd": pwd},{"_id":1,"position":1})
+    data = db.users.find_one({"username": username, "pwd": pwd},{"_id":1,"position":1,"title":1})
     if data:
         data["time"] = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
         if data is not None:
