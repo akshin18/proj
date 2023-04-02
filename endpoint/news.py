@@ -19,11 +19,12 @@ from cdn import upload_file
 @app.route("/post_news", methods=["POST"])
 def post_news():
     # Get the username and password from the request body
+    image_url = ""
     if file := request.files.get("Image",None):
         file.save("news.png")
+        image_url = upload_file("news.png")
 
     data = request.form
-    image_url = upload_file("middle.png")
     title = data.get("title",None)
     text = data.get("text",None)
     color = data.get("color",None)
