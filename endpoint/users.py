@@ -135,7 +135,8 @@ def create_user():
         pwd = json_data["pwd"]
         title = json_data["title"]
         position = json_data.get("position",3)
-        res = create_user_data(username,pwd,title,position)
+        project = json_data.get("project","")
+        res = create_user_data(username,pwd,title,position,project)
         if res:
             response = jsonify({"status":1,"message":"Successfully Added"})
             return response

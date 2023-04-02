@@ -8,7 +8,7 @@ from datetime import datetime
 
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
-from db_func import add_dep_reg_data,get_dep_reg_data
+from db_func import add_dep_reg_data,get_dep_reg_data, get_statistic_name_data
 from cdn import upload_file
 
 
@@ -38,6 +38,16 @@ def get_statistic():
     response = jsonify({"status":1,"data":datas})
     return response
 
+@app.route("/get_statistic_name",methods=["GET"])
+def get_statistic_name():
+    token = request.headers.get("token")
+    user = validate_jwt_token(token)
+    if not user:
+        response = jsonify({"status":0,"message":"Error"}),404
+        return response
+    data = get_statistic_name_data()
+    response = jsonify({"status":1,"data":data})
+    return response
 
 @app.route("/add_dep_reg",methods=["POST"])
 def add_dep_reg():
