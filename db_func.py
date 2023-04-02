@@ -328,12 +328,12 @@ def add_dep_reg_data(date, dep, reg, channel_id):
 
 def get_dep_reg_data(channel_id, date):
     res = db.dep_reg.find_one(
-        {"channel_id": channel_id, "date": date}, {"reg": 1, "dep": 1})
+        {"channel_id": channel_id, "date": date}, {"reg": 1, "dep": 1},sort=[("_id", pymongo.DESCENDING)])
     if not res:
         return 0, 0
     return res["reg"], res["dep"]
 
 
 def get_statistic_name_data():
-    res = list(db.channel.find({},{"_id":0,"channel_name":1,"channel_id":1}),sort=[("_id", pymongo.DESCENDING)])
+    res = list(db.channel.find({},{"_id":0,"channel_name":1,"channel_id":1}))
     return res
