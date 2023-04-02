@@ -26,7 +26,7 @@ def get_statistic():
         all_join = 0
         all_left = 0
         date = datetime.now().strftime("%d.%m.%Y")
-        dep,reg = get_dep_reg_data(data["channel_id"],date)
+        reg,dep = get_dep_reg_data(data["channel_id"],date)
         for i in data["left_join_stat"]:
             all_join += i["join"]
             all_left += i["left"]
