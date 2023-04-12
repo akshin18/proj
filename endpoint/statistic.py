@@ -10,7 +10,7 @@ from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
 from db_func import add_dep_reg_data,get_dep_reg_data, get_statistic_name_data
 from cdn import upload_file
-
+ 
 
 @app.route("/get_statistic",methods=["GET"])
 def get_statistic():
@@ -34,7 +34,7 @@ def get_statistic():
         data["reg"] = reg
         data["all_join"] = all_join
         data["all_left"] = all_left
-        data["percen"] = round(((data["sub_count"]/data["left_join_stat"][0]["subscribers"])-1)*100,2)
+        # data["percen"] = round(((data["sub_count"]/data["left_join_stat"][0]["subscribers"])-1)*100,2)
     response = jsonify({"status":1,"data":datas})
     return response
 
