@@ -1,7 +1,7 @@
 from app import app,sched
 from endpoint import users,news,market,test,tasks,adm_panel,statistic,leaderboard,notifications
 from db_func import task_procces_check,loger_set
-from scheduler import main_schedule, salary_counter, count_rang
+from scheduler import main_schedule, count_rang
 import sys,os,time
 
 if sys.platform != "win32":

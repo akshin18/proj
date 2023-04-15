@@ -8,35 +8,42 @@ from datetime import datetime
 
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
-from db_func import add_dep_reg_data,get_dep_reg_data, get_statistic_name_data
+from db_func import add_dep_reg_data, get_date_dif,get_dep_reg_data, get_stat, get_statistic_name_data, get_timestamp, prettier_stat
 from cdn import upload_file
  
 
 @app.route("/get_statistic",methods=["GET"])
 def get_statistic():
+    from_time = request.args.get("from_time",None)
+    to_time = request.args.get("to_time",None)
+    channel_id = request.args.get("channel_id",None)
+    
     token = request.headers.get("token")
     user = validate_jwt_token(token)
     position = user.get("position")
-    filter = {}
     if position  == 3:
         filter = {"channel_id":user.get("channel_id")}
-    datas = list(db.channel.find(filter,{"_id":0}))
+    else:
+        filter = {"channel_id":channel_id}
+    
+    datas = list(db.channel.find(filter,{"_id":0,"name":1,"channel_id":1}))
     for data in datas:
-        data["date"] = datetime.now().strftime("%d.%m")
-        all_join = 0
-        all_left = 0
-        date = datetime.now().strftime("%d.%m.%Y")
-        reg,dep = get_dep_reg_data(data["channel_id"],date)
-        for i in data["left_join_stat"]:
-            all_join += i["join"]
-            all_left += i["left"]
-        data["dep"] = dep
-        data["reg"] = reg
-        data["all_join"] = all_join
-        data["all_left"] = all_left
-        # data["percen"] = round(((data["sub_count"]/data["left_join_stat"][0]["subscribers"])-1)*100,2)
+        channel_id = data["channel_id"]
+        if not from_time or not to_time:
+            date = [datetime.now().strftime("%d.%m.%Y")]
+            from_timestamp,to_stimestamp = "",""
+        else:
+            date = get_date_dif(from_time,to_time)
+            from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
+        dep_reg = get_dep_reg_data(channel_id,date)
+        main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
+        print(dep_reg)
+        data ["stat"] = prettier_stat(main_stat,dep_reg)
+
     response = jsonify({"status":1,"data":datas})
     return response
+
+
 
 @app.route("/get_statistic_name",methods=["GET"])
 def get_statistic_name():

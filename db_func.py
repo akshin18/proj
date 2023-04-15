@@ -1,10 +1,12 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 from bson import ObjectId
 # db.test.insert_one({"test":"test"})
 # Mongo.db.users.insert_one({"name":"akshin","ok":"ol","as":1})
 from config import db
 from add_func import check_update_date, generate_code
 import pymongo
+import requests
+
 
 def create_user(data):
     check = check_username(data["username"])
@@ -327,13 +329,67 @@ def add_dep_reg_data(date, dep, reg, channel_id):
 
 
 def get_dep_reg_data(channel_id, date):
-    res = db.dep_reg.find_one(
-        {"channel_id": channel_id, "date": date}, {"reg": 1, "dep": 1},sort=[("_id", pymongo.DESCENDING)])
-    if not res:
-        return 0, 0
-    return res["reg"], res["dep"]
+    res = list(db.dep_reg.find(
+        {"channel_id": channel_id, "date": {"$in":date}}, {"_id":0,"reg": 1, "dep": 1,"date":1},sort=[("_id", pymongo.DESCENDING)]))
+    res_date = {}
+    for i in res:
+        dep = i["dep"]
+        reg = i["reg"]
+        if dep == '':
+            dep = 0
+        if reg == '':
+            reg = 0
+        if i["date"] in res_date.keys():
+            res_date[i["date"]]["dep"] += int(dep)
+            res_date[i["date"]]["reg"] += int(reg)
+        else:
+            res_date[i["date"]]= {"dep":int(dep),"reg":int(reg)}
+    if res_date == {}:
+        res_date = {date[0]:{"dep":0,"reg":0}}
+    return res_date
 
+def get_timestamp(from_time,to_time):
+    return int(datetime.strptime(from_time,"%d.%m.%Y").timestamp()),int(datetime.strptime(to_time,"%d.%m.%Y").timestamp())
+
+def get_stat(channel_id,from_timestamp,to_stimestamp):
+
+    url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
+
+    payload={}
+    headers = {
+    'ApiKey': 'q8B67Lh7hj2Ou'
+    }
+
+    response = requests.get( url, headers=headers, data=payload)
+
+    return response.json()
+
+
+    # if not res:
+    #     return 0, 0
+    # return res["reg"], res["dep"]
+
+def get_date_dif(from_time,to_time):
+    d1 = datetime.strptime(from_time,"%d.%m.%Y")
+    d2 = datetime.strptime(to_time,"%d.%m.%Y")
+    diff = d2 - d1
+    return [(d1 + timedelta(i)).strftime("%d.%m.%Y") for i in range(diff.days + 1)]
 
 def get_statistic_name_data():
     res = list(db.channel.find({},{"_id":0,"channel_name":1,"channel_id":1}))
     return res
+
+def prettier_stat(stat,dep_reg):
+    for i in stat:
+        all_join = 0
+        all_left = 0
+        for j,l in zip(i["joined"],i["left"]):
+            all_join += j["value"]
+            all_left += l["value"]
+        dep_reg_find = dep_reg.get(i["date"],{"dep":0,"reg":0})
+        dep,reg = dep_reg_find["dep"],dep_reg_find["reg"]
+        i["all_join"] = all_join
+        i["all_left"] = all_left
+        i["dep"] = dep
+        i["reg"] = reg
+    return stat
