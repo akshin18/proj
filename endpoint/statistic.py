@@ -24,7 +24,10 @@ def get_statistic():
     if position  == 3:
         filter = {"channel_id":user.get("channel_id")}
     else:
-        filter = {"channel_id":channel_id}
+        if channel_id != None:
+            filter = {"channel_id":channel_id}
+        else:
+            filter = {}
     
     datas = list(db.channel.find(filter,{"_id":0,"name":1,"channel_id":1}))
     for data in datas:
