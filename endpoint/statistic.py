@@ -4,7 +4,7 @@ from add_func import check_register_entity
 from flask_cors import cross_origin
 from bson import json_util
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
@@ -34,14 +34,13 @@ def get_statistic():
         channel_id = data["channel_id"]
         if not from_time or not to_time:
             date = [datetime.now().strftime("%d.%m.%Y")]
-            from_timestamp,to_stimestamp = "",""
+            from_timestamp,to_stimestamp = int((datetime.now()).timestamp()),int(datetime.now().timestamp())
         else:
             date = get_date_dif(from_time,to_time)
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
         dep_reg = get_dep_reg_data(channel_id,date)
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
-        print(dep_reg)
-        data ["stat"] = prettier_stat(main_stat,dep_reg)
+        data["stat"] = prettier_stat(main_stat,dep_reg)
 
     response = jsonify({"status":1,"data":datas})
     return response

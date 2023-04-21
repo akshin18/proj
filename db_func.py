@@ -352,16 +352,16 @@ def get_timestamp(from_time,to_time):
     return int(datetime.strptime(from_time,"%d.%m.%Y").timestamp()),int(datetime.strptime(to_time,"%d.%m.%Y").timestamp())
 
 def get_stat(channel_id,from_timestamp,to_stimestamp):
-
-    url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
-
+    if from_timestamp == "" or to_stimestamp == "":
+        url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}"
+    else:
+        url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
     payload={}
     headers = {
     'ApiKey': 'q8B67Lh7hj2Ou'
     }
 
     response = requests.get( url, headers=headers, data=payload)
-
     return response.json()
 
 
