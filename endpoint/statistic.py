@@ -28,6 +28,7 @@ def get_statistic():
             filter = {"channel_id":channel_id}
         else:
             filter = {}
+    # filter = {}
     
     datas = list(db.channel.find(filter,{"_id":0,"name":1,"channel_id":1}))
     for data in datas:
@@ -41,6 +42,15 @@ def get_statistic():
         dep_reg = get_dep_reg_data(channel_id,date)
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
         data["stat"] = prettier_stat(main_stat,dep_reg)
+        for i in data["stat"]:
+            stata = []
+            for zi,j in enumerate(i["joined"]):
+                stata.append({"time":j["time"],"join":j["value"],"left":i["left"][zi]["value"],"sub":i["subscriberGraph"][zi]["subscribers"]})
+            i["statistic"] = stata
+            i.pop("joined")        
+            i.pop("left")        
+            i.pop("subscriberGraph")        
+
 
     response = jsonify({"status":1,"data":datas})
     return response
