@@ -30,7 +30,7 @@ def get_statistic():
             filter = {}
     # filter = {}
     
-    datas = list(db.channel.find(filter,{"_id":0,"name":1,"channel_id":1}))
+    datas = list(db.channel.find(filter,{"_id":0}))
     for data in datas:
         channel_id = data["channel_id"]
         if not from_time or not to_time:
