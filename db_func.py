@@ -50,7 +50,6 @@ def add_news(title, text, color, hashtag, image_url):
 def add_task(title, content, worker, manager, fine, minute, hour, date, feedback, _type, user_state=2):
     now = datetime.now()
     state = 0
-    print(user_state)
     if user_state == 1:
         state = 1
 
@@ -100,7 +99,6 @@ def delete_user(username):
 
 def get_market_data():
     data = list(db.market.find({}))
-    print(data)
     for i in data:
         i["_id"] = str(i["_id"])
     return data
@@ -188,7 +186,6 @@ def get_task_data(user_id, title=None):
 def confirm_task_data(user_id, _id):
     res = db.tasks.update_one({"worker": user_id, "state": {
                               "$in": [0, 3]}, "_id": ObjectId(_id)}, {"$set": {"state": 1}})
-    print(res.raw_result)
     if res.raw_result["n"]:
         return True
     return False
@@ -215,7 +212,6 @@ def finish_task_data(user_id, _id):
         {"manager": (user_id), "state": 2, "_id": ObjectId(_id)}, {"$set": {"state": 4}})
     worker = db.tasks.find_one({"_id": ObjectId(_id)}, {"worker": 1})["worker"]
     db.users.update_one({"_id": ObjectId(worker)}, {"$inc": {"mmr": 35}})
-    print(res.raw_result)
     if res.raw_result["n"]:
         return True
     return False
