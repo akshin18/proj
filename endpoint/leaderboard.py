@@ -14,7 +14,6 @@ from db_func import create_user, add_news, get_news_from_db,delete_news_data
 
 @app.route("/get_leaderboard",methods=["GET"])
 def get_leaderboard():
-    print("hge")
     key = request.args.get("key",None)
     if not key :
         key = "dep"

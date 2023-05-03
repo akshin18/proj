@@ -38,6 +38,8 @@ def check_data_appear(channel_id,channel_name):
         db.channel.insert_one({
             "channel_id":channel_id,
             "channel_name":channel_name,
+            "image":"",
+            
             })
 
 def main_schedule():
