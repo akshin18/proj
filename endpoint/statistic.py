@@ -39,7 +39,6 @@ def get_statistic():
         else:
             date = get_date_dif(from_time,to_time)
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
-        print(date)
         dep_reg = get_dep_reg_data(channel_id,date)
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
         data["stat"] = prettier_stat(main_stat,dep_reg)
