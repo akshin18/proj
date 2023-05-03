@@ -49,9 +49,10 @@ def get_statistic():
             i["statistic"] = stata
             i.pop("joined")        
             i.pop("left")        
-            i.pop("subscriberGraph")        
+            i.pop("subscriberGraph")  
 
-
+        data["percen"] =round(((data["stat"]["statistic"][1]/data["stat"]["statistic"][0])-1)*100,2)
+            
     response = jsonify({"status":1,"data":datas})
     return response
 
