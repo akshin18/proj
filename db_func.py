@@ -347,10 +347,11 @@ def get_dep_reg_data(channel_id, date):
     return res_date
 
 def get_timestamp(from_time,to_time):
-    return int(datetime.strptime(from_time,"%d.%m.%Y").timestamp())+10000,int(datetime.strptime(to_time,"%d.%m.%Y").timestamp())+10000
+    return int(datetime.strptime(from_time,"%d.%m.%Y").timestamp())+20000,int(datetime.strptime(to_time,"%d.%m.%Y").timestamp())+20000
 
 def get_stat(channel_id,from_timestamp,to_stimestamp):
     if from_timestamp == "" or to_stimestamp == "":
+        logging.warning("SUDA")
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}"
     else:
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
