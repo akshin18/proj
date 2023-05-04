@@ -39,6 +39,7 @@ def check_data_appear(channel_id,channel_name):
             "channel_id":channel_id,
             "channel_name":channel_name,
             "image":"",
+            "active":True
             
             })
 
