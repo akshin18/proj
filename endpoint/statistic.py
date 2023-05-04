@@ -47,10 +47,10 @@ def get_statistic():
         logging.warning(dep_reg)
         data["stat"] = prettier_stat(main_stat,dep_reg,ticket_average_time)
         for i in data["stat"]:
-            stata = []
-            for zi,j in enumerate(i["joined"]):
-                stata.append({"time":j["time"],"join":j["value"],"left":i["left"][zi]["value"],"sub":i["subscriberGraph"][zi]["subscribers"]})
-            i["statistic"] = stata
+            # stata = []
+            # for zi,j in enumerate(i["joined"]):
+            #     stata.append({"time":j["time"],"join":j["value"],"left":i["left"][zi]["value"],"sub":i["subscriberGraph"][zi]["subscribers"]})
+            # i["statistic"] = stata
             i.pop("joined")        
             i.pop("left")        
             i.pop("subscriberGraph")  
