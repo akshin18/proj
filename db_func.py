@@ -420,4 +420,4 @@ def get_ticket_average(channel_id,from_timestamp,to_stimestamp):
     result = {}
     for i in data:
         result.update({"date":i["date"],"ticket":i["ticketCount"],"avarage":i["answerTime"]["averageSeconds"]})
-    return response.json()
+    return result
