@@ -36,7 +36,7 @@ def get_statistic():
         channel_id = data["channel_id"]
         if not from_time or not to_time:
             date = [datetime.now().strftime("%d.%m.%Y")]
-            from_timestamp,to_stimestamp = int((datetime.now()).timestamp())+10000,int(datetime.now().timestamp())+10000
+            from_timestamp,to_stimestamp = int((datetime.now()).timestamp())+30000,int(datetime.now().timestamp())+30000
         else:
             date = get_date_dif(from_time,to_time)
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)

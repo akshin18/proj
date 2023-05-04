@@ -347,7 +347,7 @@ def get_dep_reg_data(channel_id, date):
     return res_date
 
 def get_timestamp(from_time,to_time):
-    return int(datetime.strptime(from_time,"%d.%m.%Y").timestamp())+20000,int(datetime.strptime(to_time,"%d.%m.%Y").timestamp())+20000
+    return int(datetime.strptime(from_time,"%d.%m.%Y").timestamp())+30000,int(datetime.strptime(to_time,"%d.%m.%Y").timestamp())+30000
 
 def get_stat(channel_id,from_timestamp,to_stimestamp):
     if from_timestamp == "" or to_stimestamp == "":
