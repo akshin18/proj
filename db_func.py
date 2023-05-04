@@ -355,6 +355,7 @@ def get_stat(channel_id,from_timestamp,to_stimestamp):
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}"
     else:
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
+    print(url)
     payload={}
     headers = {
     'ApiKey': 'q8B67Lh7hj2Ou'
@@ -379,7 +380,7 @@ def get_statistic_name_data():
     res = list(db.channel.find({},{"_id":0,"channel_name":1,"channel_id":1}))
     return res
 
-def prettier_stat(stat,dep_reg):
+def prettier_stat(stat,dep_reg,ticket_average_time):
     for i in stat:
         all_join = 0
         all_left = 0
@@ -387,9 +388,36 @@ def prettier_stat(stat,dep_reg):
             all_join += j["value"]
             all_left += l["value"]
         dep_reg_find = dep_reg.get(i["date"],{"dep":0,"reg":0})
+        ticket_average_time_find = ticket_average_time.get(i["date"],{"ticket":0,"average":0})
         dep,reg = dep_reg_find["dep"],dep_reg_find["reg"]
+        ticket,average = ticket_average_time_find["ticket"],ticket_average_time_find["average"]
         i["all_join"] = all_join
         i["all_left"] = all_left
         i["dep"] = dep
         i["reg"] = reg
+        i["ticket"] = ticket
+        i["average"] = average
     return stat
+
+
+
+def get_ticket_average():
+    r = requests.get()
+
+
+
+def get_ticket_average(channel_id,from_timestamp,to_stimestamp):
+
+    url = f"https://api2.traffkillas.kz/api/v1/statistics/tickets/range?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
+    payload={}
+    headers = {
+    'ApiKey': 'q8B67Lh7hj2Ou'
+    }
+    response = requests.get( url, headers=headers, data=payload)
+    if response.status_code != 200:
+        return {"date":datetime.now().strftime("%d.%m.%Y"),"ticket":0,"avarage":0}
+    data = response.json()
+    result = {}
+    for i in data:
+        result.update({"date":i["date"],"ticket":i["ticketCount"],"avarage":i["answerTime"]["averageSeconds"]})
+    return response.json()

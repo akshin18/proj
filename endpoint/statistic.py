@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
-from db_func import add_dep_reg_data, get_date_dif,get_dep_reg_data, get_stat, get_statistic_name_data, get_timestamp, prettier_stat
+from db_func import add_dep_reg_data, get_date_dif,get_dep_reg_data, get_stat, get_statistic_name_data, get_timestamp, prettier_stat, get_ticket_average
 from cdn import upload_file
 import logging
  
@@ -40,10 +40,12 @@ def get_statistic():
         else:
             date = get_date_dif(from_time,to_time)
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
+        ticket_average_time = get_ticket_average(channel_id,from_timestamp,to_stimestamp)
+        print(ticket_average_time)
         dep_reg = get_dep_reg_data(channel_id,date)
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
-        logging.warning(main_stat[0]["date"])
-        data["stat"] = prettier_stat(main_stat,dep_reg)
+        logging.warning(dep_reg)
+        data["stat"] = prettier_stat(main_stat,dep_reg,ticket_average_time)
         for i in data["stat"]:
             stata = []
             for zi,j in enumerate(i["joined"]):
@@ -57,6 +59,8 @@ def get_statistic():
         data["subs"] = data["stat"][0]["statistic"][-1]["sub"]
     response = jsonify({"status":1,"data":datas})
     return response
+
+
 
 
 
