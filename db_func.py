@@ -6,7 +6,7 @@ from config import db
 from add_func import check_update_date, generate_code
 import pymongo
 import requests
-from loguru import logger
+import logging
 
 
 
@@ -370,7 +370,7 @@ def get_stat(channel_id,from_timestamp,to_stimestamp):
 def get_date_dif(from_time,to_time):
     d1 = datetime.strptime(from_time,"%d.%m.%Y")
     d2 = datetime.strptime(to_time,"%d.%m.%Y")
-    logger.success(f"{d1} : {from_time} || {d2} : {to_time}")
+    logging.warning(f"{d1} : {from_time} || {d2} : {to_time}")
     diff = d2 - d1
     return [(d1 + timedelta(i)).strftime("%d.%m.%Y") for i in range(diff.days + 1)]
 
