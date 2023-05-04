@@ -42,7 +42,7 @@ def get_statistic():
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
         dep_reg = get_dep_reg_data(channel_id,date)
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
-        logging.warning(from_timestamp)
+        logging.warning(main_stat[0]["date"])
         data["stat"] = prettier_stat(main_stat,dep_reg)
         for i in data["stat"]:
             stata = []
