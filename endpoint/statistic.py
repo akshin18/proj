@@ -18,6 +18,7 @@ def get_statistic():
     from_time = request.args.get("from_time",None)
     to_time = request.args.get("to_time",None)
     channel_id = request.args.get("channel_id",None)
+    active = request.args.get("active",None)
     
     token = request.headers.get("token")
     user = validate_jwt_token(token)
@@ -29,6 +30,12 @@ def get_statistic():
             filter = {"channel_id":channel_id}
         else:
             filter = {}
+    
+    if active != None:
+        if active in ["True","true",True]:
+            filter.update({"active":True})
+        elif active in ["False","false",False]:
+            filter.update({"active":False})
     # filter = {}
     
     datas = list(db.channel.find(filter,{"_id":0}))
@@ -120,4 +127,19 @@ def add_project_image():
     image_url = upload_file("middle.png")
     channel_id = request.form.get("channel_id",None)
     db.channel.update_one({"channel_id":channel_id},{"$set":{"image":image_url}})
+    return jsonify({"status":1,"message":"ok"})
+
+
+
+@app.route("/change_active",methods=["POST"])
+def change_active():
+
+    
+    token = request.headers.get("token")
+    user = validate_jwt_token(token)
+    data = request.get_json()
+    active = data["active"]
+    channel_id = data["channel_id"]
+    print(active)
+    db.channel.update_one({"channel_id":channel_id},{"$set":{"active":active}})
     return jsonify({"status":1,"message":"ok"})
