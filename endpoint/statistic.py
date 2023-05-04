@@ -41,8 +41,21 @@ def get_statistic():
             date = get_date_dif(from_time,to_time)
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
         ticket_average_time = get_ticket_average(channel_id,from_timestamp,to_stimestamp)
-        print(ticket_average_time)
         dep_reg = get_dep_reg_data(channel_id,date)
+        weekly_dep_reg = get_dep_reg_data(channel_id,get_date_dif(((datetime.now()-timedelta(days=14)).strftime("%d.%m/%Y"),datetime.now().strftime("%d.%m/%Y"))))
+        weekly_ticket_average_time = get_ticket_average(channel_id,((datetime.now()-timedelta(days=3600)).strftime("%d.%m/%Y"),datetime.now().strftime("%d.%m/%Y")))
+        weekly_dep = 0
+        weekly_reg = 0
+        weekly_ticket = 0
+        dep_chart = []
+        reg_chart = []
+        for i in weekly_dep_reg:
+            weekly_dep += weekly_dep_reg[i]["dep"]
+            weekly_reg += weekly_dep_reg[i]["reg"]
+            dep_chart.append(weekly_dep_reg[i]["dep"])
+            reg_chart.append(weekly_dep_reg[i]["reg"])
+        for i in weekly_ticket_average_time:
+            weekly_ticket += weekly_ticket_average_time[i]["ticket"]
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
         logging.warning(dep_reg)
         data["stat"] = prettier_stat(main_stat,dep_reg,ticket_average_time)
@@ -57,6 +70,11 @@ def get_statistic():
 
         data["percen"] =round(((sub[-1]["subscribers"]/sub[0]["subscribers"])-1)*100,2)
         data["subs"] = sub[-1]["subscribers"]
+        data["weekly_dep"] = weekly_dep
+        data["weekly_reg"] = weekly_reg
+        data["weekly_ticket"] = weekly_ticket
+        data["dep_chart"] = dep_chart
+        data["reg_chart"] = reg_chart
     response = jsonify({"status":1,"data":datas})
     return response
 
