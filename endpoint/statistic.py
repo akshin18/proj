@@ -42,8 +42,10 @@ def get_statistic():
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
         ticket_average_time = get_ticket_average(channel_id,from_timestamp,to_stimestamp)
         dep_reg = get_dep_reg_data(channel_id,date)
-        weekly_dep_reg = get_dep_reg_data(channel_id,get_date_dif(((datetime.now()-timedelta(days=14)).strftime("%d.%m/%Y"),datetime.now().strftime("%d.%m/%Y"))))
-        weekly_ticket_average_time = get_ticket_average(channel_id,((datetime.now()-timedelta(days=3600)).strftime("%d.%m/%Y"),datetime.now().strftime("%d.%m/%Y")))
+        weekly_dep_reg = get_dep_reg_data(channel_id,get_date_dif((datetime.now()-timedelta(days=14)).strftime("%d.%m.%Y"),datetime.now().strftime("%d.%m.%Y")))
+        middle_info = get_date_dif((datetime.now()-timedelta(days=3600)).strftime("%d.%m.%Y"),datetime.now().strftime("%d.%m.%Y"))
+        weekly_ticket_from,weekly_ticket_to = get_timestamp(middle_info[0],middle_info[1])
+        weekly_ticket_average_time = get_ticket_average(channel_id,weekly_ticket_from,weekly_ticket_to )
         weekly_dep = 0
         weekly_reg = 0
         weekly_ticket = 0
@@ -57,7 +59,6 @@ def get_statistic():
         for i in weekly_ticket_average_time:
             weekly_ticket += weekly_ticket_average_time[i]["ticket"]
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
-        logging.warning(dep_reg)
         data["stat"] = prettier_stat(main_stat,dep_reg,ticket_average_time)
         for i in data["stat"]:
             # stata = []

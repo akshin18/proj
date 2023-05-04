@@ -355,7 +355,6 @@ def get_stat(channel_id,from_timestamp,to_stimestamp):
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}"
     else:
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
-    print(url)
     payload={}
     headers = {
     'ApiKey': 'q8B67Lh7hj2Ou'
@@ -415,9 +414,9 @@ def get_ticket_average(channel_id,from_timestamp,to_stimestamp):
     }
     response = requests.get( url, headers=headers, data=payload)
     if response.status_code != 200:
-        return {"date":datetime.now().strftime("%d.%m.%Y"),"ticket":0,"avarage":0}
+        return {datetime.now().strftime("%d.%m.%Y"):{"ticket":0,"average":0}}
     data = response.json()
     result = {}
     for i in data:
-        result.update({"date":i["date"],"ticket":i["ticketCount"],"avarage":i["answerTime"]["averageSeconds"]})
+        result.update({i["date"]:{"ticket":i["ticketCount"],"average":i["answerTime"]["averageSeconds"]}})
     return result
