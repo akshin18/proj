@@ -35,9 +35,10 @@ def get_statistic():
         channel_id = data["channel_id"]
         if not from_time or not to_time:
             date = [datetime.now().strftime("%d.%m.%Y")]
-            from_timestamp,to_stimestamp = int((datetime.now()).timestamp()),int(datetime.now().timestamp())
+            from_timestamp,to_stimestamp = int((datetime.now()).timestamp())+10000,int(datetime.now().timestamp())+10000
         else:
             date = get_date_dif(from_time,to_time)
+            print("hello")
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
         dep_reg = get_dep_reg_data(channel_id,date)
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
