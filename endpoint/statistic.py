@@ -10,6 +10,7 @@ from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token
 from db_func import add_dep_reg_data, get_date_dif,get_dep_reg_data, get_stat, get_statistic_name_data, get_timestamp, prettier_stat
 from cdn import upload_file
+import logging
  
 
 @app.route("/get_statistic",methods=["GET"])
@@ -38,10 +39,10 @@ def get_statistic():
             from_timestamp,to_stimestamp = int((datetime.now()).timestamp())+10000,int(datetime.now().timestamp())+10000
         else:
             date = get_date_dif(from_time,to_time)
-            print("hello")
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
         dep_reg = get_dep_reg_data(channel_id,date)
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
+        logging.warning(from_timestamp)
         data["stat"] = prettier_stat(main_stat,dep_reg)
         for i in data["stat"]:
             stata = []
