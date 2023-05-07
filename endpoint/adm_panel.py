@@ -24,6 +24,7 @@ def edit_admin_panel():
     key = list(data.keys())[0]
     value = data[key]
     db.adm_panel.update_one({},{"$set":{key:value}})
+    db.users.update_many({"title":key},{"$set":{"salary":value}})
     response = jsonify({"status":1,"message":"Succesfully updated"})
     return response
 

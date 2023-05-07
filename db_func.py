@@ -283,7 +283,7 @@ def delete_user_data(username):
     return True
 
 
-def create_user_data(username, pwd, title, position,project):
+def create_user_data(username, pwd, title, position,project,salary):
     now = datetime.now()
     db.users.insert_one(
         {
@@ -298,6 +298,7 @@ def create_user_data(username, pwd, title, position,project):
             "phone": "",
             "address": "",
             "position": int(position),
+            "salary":salary,
             "mmr": 0,
             "ttk": 0,
             "tenge": 0,
@@ -420,3 +421,9 @@ def get_ticket_average(channel_id,from_timestamp,to_stimestamp):
     for i in data:
         result.update({i["date"]:{"ticket":i["ticketCount"],"average":i["answerTime"]["averageSeconds"]}})
     return result
+
+
+def get_salary(title):
+    print(title)
+    res = db.adm_panel.find_one({},{"_id":0,title:1})
+    return res[title]

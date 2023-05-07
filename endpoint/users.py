@@ -6,7 +6,7 @@ from flask_cors import cross_origin
 from app import app
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token,check_register_entity
-from db_func import create_user, get_users_data,update_profile_info, delete_user_data,create_user_data
+from db_func import create_user, get_users_data,update_profile_info, delete_user_data,create_user_data, get_salary
 
 
 
@@ -132,11 +132,15 @@ def create_user():
     data = validate_jwt_token(token)
     if data and data["position"] < 3:
         username = json_data["username"]
+        check_username = db.users.find_one({"username":username},{"_id":0,"username":1})
+        if check_username not in [None,{}]:
+            return jsonify({"status":0}), 404
         pwd = json_data["pwd"]
         title = json_data["title"]
         position = json_data.get("position",3)
         project = json_data.get("project","")
-        res = create_user_data(username,pwd,title,position,project)
+        salary = get_salary(title)
+        res = create_user_data(username,pwd,title,position,project,salary)
         if res:
             response = jsonify({"status":1,"message":"Successfully Added"})
             return response
@@ -144,3 +148,21 @@ def create_user():
         return response
         
     return jsonify({"status":0}), 404
+
+
+
+@app.route("/edit_salary",methods=["POST"])
+def edit_salary():
+    json_data = request.get_json()
+    token = request.headers["token"]
+    data = validate_jwt_token(token)
+    if data and data["position"] < 3:
+        salary = json_data.get("salary",0)
+        username = json_data.get("username",0)
+        db.users.update_one({"username":username},{"$set":{"salary":salary}})
+        response = jsonify({"status":0,"message":"Something worong during update"})
+        return response
+        
+    return jsonify({"status":0}), 404
+
+
