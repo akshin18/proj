@@ -165,4 +165,18 @@ def edit_salary():
         
     return jsonify({"status":0}), 404
 
+@app.route("/edit_project",methods=["POST"])
+def edit_salary():
+    json_data = request.get_json()
+    token = request.headers["token"]
+    data = validate_jwt_token(token)
+    if data and data["position"] < 3:
+        project = json_data.get("project","")
+        username = json_data.get("username",0)
+        db.users.update_one({"username":username},{"$set":{"project":project}})
+        response = jsonify({"status":0,"message":"Something worong during update"})
+        return response
+        
+    return jsonify({"status":0}), 404
+
 
