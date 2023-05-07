@@ -29,7 +29,10 @@ def get_leaderboard():
 
 @app.route("/get_leaderboard_users",methods=["GET"])
 def get_leaderboard_users():
-    datas = list(db.users.find({},{"_id":0,"image":1,"mmr":1}).sort("mmr", -1  ))
+    datas = list(db.users.find({},{"_id":0,"image":1,"mmr":1,"username":1}).sort("mmr", -1  ))
+    for i in datas:
+        if i.get("image",None) == None:
+            i["image"] = ""
     response = jsonify({"status":1,"data":datas})
     return response
 

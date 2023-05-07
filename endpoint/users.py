@@ -159,7 +159,7 @@ def edit_salary():
     if data and data["position"] < 3:
         salary = json_data.get("salary",0)
         username = json_data.get("username",0)
-        db.users.update_one({"username":username},{"$set":{"salary":salary}})
+        db.users.update_one({"username":username},{"$set":{"salary":int(salary)}})
         response = jsonify({"status":0,"message":"Something worong during update"})
         return response
         
