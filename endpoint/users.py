@@ -166,7 +166,7 @@ def edit_salary():
     return jsonify({"status":0}), 404
 
 @app.route("/edit_project",methods=["POST"])
-def edit_salary():
+def edit_project():
     json_data = request.get_json()
     token = request.headers["token"]
     data = validate_jwt_token(token)
