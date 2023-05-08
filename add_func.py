@@ -84,7 +84,7 @@ def generate_jwt_token(data):
     return token.decode()
 
 def validate_jwt_token(token):
-    claims = jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS512"])
+    # claims = jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS512"])
     try:
         # Decode the JWT token and verify its signature
         claims = jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS512"])

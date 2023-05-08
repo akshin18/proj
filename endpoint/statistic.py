@@ -22,6 +22,8 @@ def get_statistic():
     
     token = request.headers.get("token")
     user = validate_jwt_token(token)
+    if user == None:
+        return jsonify({"status":0}),404
     position = user.get("position")
     if position  == 3:
         filter = {"channel_id":user.get("channel_id")}
