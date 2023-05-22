@@ -174,9 +174,9 @@ def edit_project():
         project = json_data.get("project","")
         username = json_data.get("username",0)
         db.users.update_one({"username":username},{"$set":{"project":project}})
-        response = jsonify({"status":0,"message":"Something worong during update"})
+        response = jsonify({"status":1})
         return response
         
-    return jsonify({"status":0}), 404
+    return jsonify({"status":0,"message":"Something worong during update"}), 404
 
 

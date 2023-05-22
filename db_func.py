@@ -89,11 +89,23 @@ def get_users_data():
     data = list(db.users.find({"position": {"$gt": 1}}, {
                 "_id": 0, "updated_time": 0}))
     for i in data:
-        channel_id = i.get("channel_id",None)
+        channel_id = i.get("channel_id","")
         project = i.get("project","")
         if channel_id not in ["",None,"undefined"]:
+            if isinstance(channel_id,list):
+                agentAnswerTime = []
+                for j in channel_id:
+                    agentAnswerTime.append(get_stat(j,"","")[0]["agentAnswerTime"])
+                i["agentAnswerTime"] = agentAnswerTime
+
             i["agentAnswerTime"] =  get_stat(channel_id,"","")[0]["agentAnswerTime"]
-        if project.startswith("-"):
+        if isinstance(project,list):
+                agentAnswerTime = []
+                for j in project:
+                    agentAnswerTime.append(get_stat(j,"","")[0]["agentAnswerTime"])
+                i["agentAnswerTime"] = agentAnswerTime
+        elif project.startswith("-"):
+            
             i["agentAnswerTime"] =  get_stat(project,"","")[0]["agentAnswerTime"]
 
     return data
