@@ -78,6 +78,7 @@ def get_statistic():
             i.pop("joined")        
             i.pop("left")        
             sub = i.pop("subscriberGraph")  
+            i["sub"] = sub[-1]["subscribers"]
 
         data["percen"] =round(((sub[-1]["subscribers"]/sub[0]["subscribers"])-1)*100,2)
         data["subs"] = sub[-1]["subscribers"]
