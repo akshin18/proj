@@ -51,7 +51,7 @@ def get_statistic():
             from_timestamp,to_stimestamp = get_timestamp(from_time,to_time)
         ticket_average_time = get_ticket_average(channel_id,from_timestamp,to_stimestamp)
         dep_reg = get_dep_reg_data(channel_id,date)
-        weekly_dep_reg = get_dep_reg_data(channel_id,get_date_dif((datetime.now()-timedelta(days=14)).strftime("%d.%m.%Y"),datetime.now().strftime("%d.%m.%Y")))
+        weekly_dep_reg = get_dep_reg_data(channel_id,get_date_dif((datetime.now()-timedelta(days=3650)).strftime("%d.%m.%Y"),datetime.now().strftime("%d.%m.%Y")))
         middle_info = get_date_dif((datetime.now()-timedelta(days=3600)).strftime("%d.%m.%Y"),datetime.now().strftime("%d.%m.%Y"))
         weekly_ticket_from,weekly_ticket_to = get_timestamp(middle_info[0],middle_info[1])
         weekly_ticket_average_time = get_ticket_average(channel_id,weekly_ticket_from,weekly_ticket_to )
@@ -60,9 +60,10 @@ def get_statistic():
         weekly_ticket = 0
         dep_chart = []
         reg_chart = []
-        for i in weekly_dep_reg:
-            weekly_dep += weekly_dep_reg[i]["dep"]
-            weekly_reg += weekly_dep_reg[i]["reg"]
+        for zi,i in enumerate(weekly_dep_reg):
+            if zi <7:
+                weekly_dep += weekly_dep_reg[i]["dep"]
+                weekly_reg += weekly_dep_reg[i]["reg"]
             dep_chart.append(weekly_dep_reg[i]["dep"])
             reg_chart.append(weekly_dep_reg[i]["reg"])
         for i in weekly_ticket_average_time:
