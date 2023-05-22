@@ -90,10 +90,10 @@ def get_users_data():
                 "_id": 0, "updated_time": 0}))
     for i in data:
         channel_id = i.get("channel_id",None)
-        project = i.get("project",None)
-        if channel_id not in ["",None]:
+        project = i.get("project","")
+        if channel_id not in ["",None,"undefined"]:
             i["agentAnswerTime"] =  get_stat(channel_id,"","")[0]["agentAnswerTime"]
-        if project not in ["",None]:
+        if project.startswith("-"):
             i["agentAnswerTime"] =  get_stat(project,"","")[0]["agentAnswerTime"]
 
     return data
