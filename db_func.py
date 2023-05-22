@@ -323,6 +323,7 @@ def get_notifications_data(user_id):
 
 def add_dep_reg_data(date, dep, reg, channel_id):
     timestamp = int(datetime.strptime(date, "%d.%m.%Y").timestamp()) + 100
+    db.dep_reg.delete_many({"channel_id":channel_id,"date":date})
     db.dep_reg.insert_one({"date": date, "dep": dep, "reg": reg,
                           "channel_id": channel_id, "timestamp": timestamp})
 
