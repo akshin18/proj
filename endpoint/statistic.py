@@ -69,7 +69,7 @@ def get_statistic():
         for i in weekly_ticket_average_time:
             weekly_ticket += weekly_ticket_average_time[i]["ticket"]
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
-        data["stat"] = prettier_stat(main_stat,dep_reg,ticket_average_time)
+        data["stat"],date_dep = prettier_stat(main_stat,dep_reg,ticket_average_time)
         for i in data["stat"]:
             # stata = []
             # for zi,j in enumerate(i["joined"]):
@@ -86,6 +86,7 @@ def get_statistic():
         data["weekly_ticket"] = weekly_ticket
         data["dep_chart"] = dep_chart
         data["reg_chart"] = reg_chart
+        data["date_dep"] = date_dep
     response = jsonify({"status":1,"data":datas})
     return response
 

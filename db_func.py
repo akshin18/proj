@@ -382,6 +382,7 @@ def get_statistic_name_data():
     return res
 
 def prettier_stat(stat,dep_reg,ticket_average_time):
+    date_dep = 0
     for i in stat:
         all_join = 0
         all_left = 0
@@ -395,10 +396,11 @@ def prettier_stat(stat,dep_reg,ticket_average_time):
         i["all_join"] = all_join
         i["all_left"] = all_left
         i["dep"] = dep
+        date_dep += dep
         i["reg"] = reg
         i["ticket"] = ticket
         i["average"] = average
-    return stat
+    return stat,date_dep
 
 
 
