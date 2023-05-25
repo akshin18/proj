@@ -32,7 +32,6 @@ def get_statistic():
             filter = {"channel_id":channel_id}
         else:
             filter = {}
-    print(filter)
     
     if active != None:
         if active in ["True","true",True]:
@@ -70,6 +69,9 @@ def get_statistic():
         for i in weekly_ticket_average_time:
             weekly_ticket += weekly_ticket_average_time[i]["ticket"]
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
+        if main_stat == None:
+            data["stat"] = []
+            continue
         data["stat"],date_dep = prettier_stat(main_stat,dep_reg,ticket_average_time)
         for i in data["stat"]:
             # stata = []

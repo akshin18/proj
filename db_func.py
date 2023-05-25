@@ -95,18 +95,34 @@ def get_users_data():
             if isinstance(channel_id,list):
                 agentAnswerTime = []
                 for j in channel_id:
-                    agentAnswerTime.append(get_stat(j,"","")[0]["agentAnswerTime"])
+                    stat = get_stat(j,"","")
+                    if stat != None:
+                        agentAnswerTime.append(stat[0]["agentAnswerTime"])
+                    else:
+                        agentAnswerTime.append(0)
+
                 i["agentAnswerTime"] = agentAnswerTime
 
-            i["agentAnswerTime"] =  get_stat(channel_id,"","")[0]["agentAnswerTime"]
+            stat = get_stat(channel_id,"","")
+            if stat != None:
+                i["agentAnswerTime"] =  stat[0]["agentAnswerTime"]
+            else:
+                i["agentAnswerTime"] =  0
         if isinstance(project,list):
                 agentAnswerTime = []
                 for j in project:
-                    agentAnswerTime.append(get_stat(j,"","")[0]["agentAnswerTime"])
+                    stat = get_stat(j,"","")
+                    if stat != None:
+                        agentAnswerTime.append(stat[0]["agentAnswerTime"])
+                    else:
+                        agentAnswerTime.append(0)
                 i["agentAnswerTime"] = agentAnswerTime
         elif project.startswith("-"):
-            
-            i["agentAnswerTime"] =  get_stat(project,"","")[0]["agentAnswerTime"]
+            stat = get_stat(project,"","")
+            if stat != None:
+                i["agentAnswerTime"] =  stat[0]["agentAnswerTime"]
+            else:
+                i["agentAnswerTime"] =  0
 
     return data
 
@@ -377,12 +393,15 @@ def get_stat(channel_id,from_timestamp,to_stimestamp):
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}"
     else:
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
+    print(url)
     payload={}
     headers = {
     'ApiKey': 'q8B67Lh7hj2Ou'
     }
 
     response = requests.get( url, headers=headers, data=payload)
+    if response.status_code == 500:
+        return None
     return response.json()
 
 
