@@ -69,6 +69,8 @@ def get_statistic():
             reg_chart.append({i:weekly_dep_reg[i]["reg"]})
         dep_chart.sort(key=lambda x:(int(list(x.keys())[0].split(".")[2]),int(list(x.keys())[0].split(".")[1]),int(list(x.keys())[0].split(".")[0]),))
         reg_chart.sort(key=lambda x:(int(list(x.keys())[0].split(".")[2]),int(list(x.keys())[0].split(".")[1]),int(list(x.keys())[0].split(".")[0])))
+        dep_chart = [[list(x.kyes())[0] for x in dep_chart],[list(x.values())[0] for x in dep_chart]]
+        reg_chart = [[list(x.kyes())[0] for x in reg_chart],[list(x.values())[0] for x in reg_chart]]
         for i in weekly_ticket_average_time:
             weekly_ticket += weekly_ticket_average_time[i]["ticket"]
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
