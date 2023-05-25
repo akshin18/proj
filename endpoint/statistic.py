@@ -19,6 +19,7 @@ def get_statistic():
     to_time = request.args.get("to_time",None)
     channel_id = request.args.get("channel_id",None)
     active = request.args.get("active",None)
+    sort = request.args.get("sort",None)
     
     token = request.headers.get("token")
     user = validate_jwt_token(token)
@@ -91,6 +92,8 @@ def get_statistic():
         data["dep_chart"] = dep_chart
         data["reg_chart"] = reg_chart
         data["date_dep"] = date_dep
+    if sort:
+        datas.sort(key=lambda x:x['date_dep'],reverse=True)
     response = jsonify({"status":1,"data":datas})
     return response
 
