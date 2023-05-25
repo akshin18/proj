@@ -79,6 +79,8 @@ def get_statistic():
         for i in reg_chart:
             reg_keys.append(list(i.keys())[0])
             reg_values.append(i[list(i.keys())[0]])
+        dep_chart = [dep_keys,dep_values]
+        reg_chart = [reg_keys,reg_values]
         for i in weekly_ticket_average_time:
             weekly_ticket += weekly_ticket_average_time[i]["ticket"]
         main_stat = get_stat(channel_id,from_timestamp,to_stimestamp)
