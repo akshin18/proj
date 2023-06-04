@@ -139,7 +139,8 @@ def add_dep_reg():
     dep = data["dep"]
     reg = data["reg"]
     channel_id = data["channel_id"]
-    add_dep_reg_data(date,dep,reg,channel_id)
+    for zi,i in enumerate(date):
+        add_dep_reg_data(date[zi],dep[zi],reg[zi],channel_id)
     response = jsonify({"status":1,"data":"Sucessfully"})
     return response
 
