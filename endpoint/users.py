@@ -1,4 +1,5 @@
 from datetime import datetime
+from cdn import upload_file
 
 from flask import request,jsonify, session
 from flask_cors import cross_origin
@@ -180,3 +181,19 @@ def edit_project():
     return jsonify({"status":0,"message":"Something worong during update"}), 404
 
 
+
+
+@app.route("/edit_profile_photo",methods=["POST"])
+def edit_profile_photo():
+    token = request.headers["token"]
+    data = validate_jwt_token(token)
+    username = data["username"]
+    if data:
+        if file := request.files.get("Image",None):
+            file.save("middle.png")
+        else:
+            return jsonify({"status":0,"message":"Does not exists image"}),400
+        image_url = upload_file("middle.png")
+        db.users.update_one({"username":username},{"$set":{"image":image_url}})
+        return jsonify({"status":1,"message":"ok"})
+    return jsonify({"status":0,"message":"Does not exists image"}),400
