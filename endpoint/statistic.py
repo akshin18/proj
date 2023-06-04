@@ -107,7 +107,7 @@ def get_statistic():
         data["reg_chart"] = reg_chart
         data["date_dep"] = date_dep
     if sort:
-        datas.sort(key=lambda x:x['date_dep'],reverse=True)
+        datas.sort(key=lambda x:x['weekly_dep'],reverse=True)
     response = jsonify({"status":1,"data":datas})
     return response
 
