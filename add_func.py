@@ -124,3 +124,11 @@ def generate_code():
     return "".join(list_of_elements[:15])
 
 
+
+def get_channel_subs(channel_id):
+
+    r = requests.get(f"http://146.0.78.143:5011/api/getSubscriberCount?channelId={channel_id}",headers={"ApiKey":"q8B67Lh7hj2Ou"})
+    print(r.text)
+    if r.status_code == 200:
+        return int(r.text)
+    return 0

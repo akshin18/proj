@@ -7,22 +7,32 @@ import json
 from datetime import datetime
 
 from config import db, PROJ_STATE
-from add_func import generate_jwt_token, validate_jwt_token
-from db_func import create_user, add_news, get_news_from_db,delete_news_data
+from add_func import generate_jwt_token, validate_jwt_token, get_channel_subs
+from db_func import create_user, add_news, get_news_from_db,delete_news_data,get_date_dif,get_dep_reg_data
 
 
 
 @app.route("/get_leaderboard",methods=["GET"])
 def get_leaderboard():
-    key = request.args.get("key",None)
-    if not key :
-        key = "dep"
-    print(key)
-    datas = list(db.channel.find({},{"_id":0}).sort(key, -1))
-    for data in datas:
-        data["date"] = datetime.now().strftime("%d.%m")
-        data["percen"] = round(((data["sub_count"]/data["left_join_stat"][0]["subscribers"])-1)*100,2)
-    response = jsonify({"status":1,"data":datas})
+    from_time = request.args.get("from_time",None)
+    to_time = request.args.get("to_time",None)
+    if not from_time or not to_time:
+        date = [datetime.now().strftime("%d.%m.%Y")]
+    else:
+        date = get_date_dif(from_time,to_time) 
+    
+    data = list(db.channel.find({},{"_id":0,"active":0}))
+    for i in data:
+        i["subs"] = get_channel_subs(i["channel_id"])
+        dep_reg = get_dep_reg_data(i["channel_id"],date)
+        dep = 0
+        reg = 0
+        for j in dep_reg:
+            dep += dep_reg[j]["dep"]
+            reg += dep_reg[j]["dep"]
+        i["dep"] = dep
+        i["reg"] = reg
+    response = jsonify({"status":1,"data":data})
     return response
 
 
