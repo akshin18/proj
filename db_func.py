@@ -365,7 +365,7 @@ def add_dep_reg_data(date, dep, reg, channel_id):
     else:
         old_data = old_data["dep"]
     res_dep = int(dep)-int(old_data)
-    db.users.update_many({"position":{"$in":[channel_id]}},[{"$set":{"ttk": {"$add":[{"$multiply":[13,res_dep]},"$ttk"    ]},"tenge": {"$add":[{"$multiply":["$salary",res_dep]},"$tenge"    ]}   }}],upsert= True)
+    db.users.update_many({"project":{"$in":[channel_id]}},[{"$set":{"ttk": {"$add":[{"$multiply":[13,res_dep]},"$ttk"    ]},"tenge": {"$add":[{"$multiply":["$salary",res_dep]},"$tenge"    ]}   }}],upsert= True)
     db.dep_reg.insert_one({"date": date, "dep": dep, "reg": reg,
                           "channel_id": channel_id, "timestamp": timestamp})
 
