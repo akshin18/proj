@@ -134,7 +134,7 @@ def add_dep_reg():
     position = user.get("position")
     data = request.get_json()
     if position  != 1:
-        response = jsonify({"status":0,"message":"Error"}),404
+        response = jsonify({"status":0,"message":"You do not have permission to edit this fucken sheet"}),401
         return response
     date = data["date"]
     dep = data["dep"]

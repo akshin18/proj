@@ -359,7 +359,13 @@ def get_notifications_data(user_id):
 
 def add_dep_reg_data(date, dep, reg, channel_id):
     timestamp = int(datetime.strptime(date, "%d.%m.%Y").timestamp()) + 100
-    db.dep_reg.delete_many({"channel_id":channel_id,"date":date})
+    old_data = db.dep_reg.find_one_and_delete({"channel_id":channel_id,"date":date},{"_id":0,"dep":1})
+    if old_data == None:
+        old_data = 0
+    else:
+        old_data = old_data["dep"]
+    res_dep = int(dep)-int(old_data)
+    db.users.update_many({"position":{"$ne":1}},[{"$set":{"ttk": {"$add":[{"$multiply":[13,res_dep]},"$ttk"    ]},"tenge": {"$add":[{"$multiply":["$salary",res_dep]},"$tenge"    ]}   }}],upsert= True)
     db.dep_reg.insert_one({"date": date, "dep": dep, "reg": reg,
                           "channel_id": channel_id, "timestamp": timestamp})
 
