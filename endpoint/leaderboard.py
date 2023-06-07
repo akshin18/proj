@@ -29,9 +29,10 @@ def get_leaderboard():
         reg = 0
         for j in dep_reg:
             dep += dep_reg[j]["dep"]
-            reg += dep_reg[j]["dep"]
+            reg += dep_reg[j]["reg"]
         i["dep"] = dep
         i["reg"] = reg
+    data.sort(key=lambda x:x['dep'],reverse=True)
     response = jsonify({"status":1,"data":data})
     return response
 
