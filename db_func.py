@@ -85,8 +85,8 @@ def get_news_from_db():
     return data
 
 
-def get_users_data():
-    data = list(db.users.find({"position": {"$gt": 1}}, {
+def get_users_data(channel_type):
+    data = list(db.users.find({"position": {"$gt": 1},"channel_type":channel_type}, {
                 "_id": 0, "updated_time": 0}))
     for i in data:
         channel_id = i.get("channel_id","")
@@ -255,17 +255,17 @@ def finish_task_data(user_id, _id):
     return False
 
 
-def get_users_position_data(needed_postion, title: str = None):
+def get_users_position_data(needed_postion, title: str = None,channel_type=None):
     if needed_postion == 3:
         if title.startswith("treat"):
-            res = list(db.users.find(
-                {"position": needed_postion, "title": {"$in": ["trat_1", "trat_2", "trat_3"]}}, {"_id": 1, "username": 1}))
+           filter_ = {"position": needed_postion, "title": {"$in": ["trat_1", "trat_2", "trat_3"]}}
         else:
-            res = list(db.users.find(
-                {"position": needed_postion, "title": title}, {"_id": 1, "username": 1}))
+            filter_ = {"position": needed_postion, "title": title}
     else:
-        res = list(db.users.find(
-            {"position": needed_postion}, {"_id": 1, "username": 1}))
+        filter_ = {"position": needed_postion}
+    if channel_type != None and channel_type != "":
+        filter_.update({"channel_type":channel_type})
+    res = list(db.users.find(filter_, {"_id": 1, "username": 1}))
     for i in res:
         i["_id"] = str(i["_id"])
     return res
@@ -319,7 +319,7 @@ def delete_user_data(username):
     return True
 
 
-def create_user_data(username, pwd, title, position,project,salary):
+def create_user_data(username, pwd, title, position,project,salary,channel_type):
     now = datetime.now()
     db.users.insert_one(
         {
@@ -341,7 +341,8 @@ def create_user_data(username, pwd, title, position,project,salary):
             "session": "",
             "project": project,
             "created_time": now,
-            "updated_time": now
+            "updated_time": now,
+            "channel_type":channel_type
         }
     )
     return True

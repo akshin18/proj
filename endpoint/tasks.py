@@ -115,7 +115,11 @@ def get_workers():
     position = user.get("position")
     if position <= 2:
         needed_postion = position + 1
-        data = get_users_position_data(needed_postion,title=user["title"])
+        if position != 1:
+            channel_type = user["channel_type"]
+        else:
+            channel_type = None
+        data = get_users_position_data(needed_postion,title=user["title"],channel_type=channel_type)
         response = jsonify({"status":1,"data":data})
         return response
     response = jsonify({"status":0,"message":"You do not have permission"})

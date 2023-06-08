@@ -54,7 +54,7 @@ def login():
         return jsonify({"status":0,"message":"Wrong creditales"})
 
     # Check if the username and password are correct
-    data = db.users.find_one({"username": username, "pwd": pwd},{"_id":1,"position":1,"title":1})
+    data = db.users.find_one({"username": username, "pwd": pwd},{"_id":1,"position":1,"title":1,"channel_type":1})
     if data:
         data["time"] = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
         if data is not None:
@@ -68,7 +68,11 @@ def login():
 
 @app.route("/get_users",methods=["GET"])
 def get_users():
-    data = get_users_data()
+    
+    token = request.headers["token"]
+    data = validate_jwt_token(token)
+    channel_type = data["channel_type"]
+    data = get_users_data(channel_type)
     response = jsonify({"status":1,"data":data})
     return response
 
@@ -141,7 +145,8 @@ def create_user():
         position = json_data.get("position",3)
         project = json_data.get("project","")
         salary = get_salary(title)
-        res = create_user_data(username,pwd,title,position,project,salary)
+        channel_type = data["channel_type"]
+        res = create_user_data(username,pwd,title,position,project,salary,channel_type)
         if res:
             response = jsonify({"status":1,"message":"Successfully Added"})
             return response
