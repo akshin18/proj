@@ -32,15 +32,15 @@ def get_channels(channel):
     response = channel.get( "getChannels")
     return response
 
-def check_data_appear(channel_id,channel_name):
+def check_data_appear(channel_id,channel_name,channel_type):
     res = db.channel.find_one({"channel_id":channel_id})
     if not res:
         db.channel.insert_one({
             "channel_id":channel_id,
             "channel_name":channel_name,
             "image":"",
-            "active":True
-            
+            "active":True,
+            "channel_type":channel_type,
             })
 
 def main_schedule():
@@ -53,7 +53,8 @@ def main_schedule():
     for i in data:
         channel_id = i["channelId"]
         channel_name = i["channelName"]
-        check_data_appear(channel_id,channel_name)
+        channel_type = i["channelCategory"]
+        check_data_appear(channel_id,channel_name,channel_type)
 
 
 # def salary_counter():
