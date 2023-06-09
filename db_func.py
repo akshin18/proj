@@ -87,10 +87,10 @@ def get_news_from_db():
 
 def get_users_data(channel_type=None):
     if channel_type:
-        data = list(db.users.find({"position": {"$gt": 1},"channel_type":channel_type}, {
+        data = list(db.users.find({"position": {"$ne": 1},"channel_type":channel_type}, {
                     "_id": 0, "updated_time": 0}))
     else:
-        data = list(db.users.find({"position": {"$gt": 1}}, {
+        data = list(db.users.find({"position": {"$ne": 1}}, {
                     "_id": 0, "updated_time": 0}))
 
     for i in data:
