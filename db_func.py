@@ -149,12 +149,16 @@ def get_market_data():
 
 def get_orders_data():
     data = list(db.orders.find({}))
-    for i in data:
+    for i in data.copy():
         i["_id"] = str(i["_id"])
         name_data = db.users.find_one({"_id": ObjectId(i["user_id"])}, {
                                       "first_name": 1, "last_name": 1, "middle_name": 1})
-        name = name_data["first_name"]+"" + \
-            name_data["last_name"]+"" + name_data["middle_name"]
+        if name_data == None:
+            db.orders.delete_many({"_id":i["_id"]})
+            data.pop(data.index(i))
+            continue
+        name = name_data.get("first_name","")+"" + \
+            name_data.get("last_name","")+"" + name_data.get("middle_name","")
         stuff_name = db.market.find_one(
             {"_id": i["stuff_id"]}, {"name": 1})["name"]
         i["name"] = name
