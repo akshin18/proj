@@ -68,13 +68,16 @@ def login():
 
 @app.route("/get_users",methods=["GET"])
 def get_users():
-    
-    token = request.headers["token"]
-    data = validate_jwt_token(token)
-    channel_type = data["channel_type"]
-    data = get_users_data(channel_type)
-    response = jsonify({"status":1,"data":data})
-    return response
+    try:
+        token = request.headers["token"]
+    except:
+        token = request.headers["Authorization"]
+    finally:
+        data = validate_jwt_token(token)
+        channel_type = data["channel_type"]
+        data = get_users_data(channel_type)
+        response = jsonify({"status":1,"data":data})
+        return response
 
 
 @app.route("/get_profile_info",methods=["GET"])
