@@ -75,6 +75,8 @@ def get_users():
     finally:
         data = validate_jwt_token(token)
         channel_type = data["channel_type"]
+        if channel_type == "":
+            channel_type = None
         data = get_users_data(channel_type)
         response = jsonify({"status":1,"data":data})
         return response
