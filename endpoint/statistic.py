@@ -20,6 +20,7 @@ def get_statistic():
     channel_id = request.args.get("channel_id",None)
     active = request.args.get("active",None)
     sort = request.args.get("sort",None)
+    channel_type = request.args.get("channel_type",None)
     
     token = request.headers.get("token")
     user = validate_jwt_token(token)
@@ -34,6 +35,8 @@ def get_statistic():
             filter = {"channel_id":channel_id}
         else:
             filter = {}
+        if position == 1:
+            filter.update({"channel_type":channel_type})
     
     if active != None:
         if active in ["True","true",True]:
