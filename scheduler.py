@@ -74,13 +74,16 @@ def main_schedule():
 def count_rang():
     res = db.users.find({})
     for i in res:
-        mmr = i["mmr"]
-        current_rang = i.get("rang",0)
-        count_rang = mmr // 150
-        if count_rang > current_rang:
-            while count_rang > current_rang:
-                current_rang += 1
-                db.users.update_one({"_id":i["_id"]},{"$inc":{"ttk":1250},"$set":{"rang":current_rang}})
+        try:
+            mmr = i["mmr"]
+            current_rang = i.get("rang",0)
+            count_rang = mmr // 150
+            if count_rang > current_rang:
+                while count_rang > current_rang:
+                    current_rang += 1
+                    db.users.update_one({"_id":i["_id"]},{"$inc":{"ttk":1250},"$set":{"rang":current_rang}})
+        except:
+            pass
     loger_set("4")
 
 

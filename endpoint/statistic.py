@@ -36,7 +36,8 @@ def get_statistic():
         else:
             filter = {}
         if position == 1:
-            filter.update({"channel_type":channel_type})
+            if channel_type:
+                filter.update({"channel_type":channel_type})
     
     if active != None:
         if active in ["True","true",True]:
@@ -47,7 +48,7 @@ def get_statistic():
 
     if position != 1:
         filter.update({"channel_type":user["channel_type"]})
-    
+    print(filter)
     datas = list(db.channel.find(filter,{"_id":0}))
     for data in datas:
         channel_id = data["channel_id"]
