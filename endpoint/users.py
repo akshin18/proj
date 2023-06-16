@@ -74,10 +74,11 @@ def get_users():
         token = request.headers["Authorization"]
     finally:
         data = validate_jwt_token(token)
+        position = data["position"]
         channel_type = data["channel_type"]
         if channel_type == "":
             channel_type = None
-        data = get_users_data(channel_type)
+        data = get_users_data(channel_type,position)
         response = jsonify({"status":1,"data":data})
         return response
 
