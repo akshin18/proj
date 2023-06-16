@@ -60,7 +60,7 @@ def login():
         if data is not None:
             # Generate a JWT token for the user
             token = generate_jwt_token(data)
-            response = jsonify({"position":data["position"],"token":token})
+            response = jsonify({"position":data["position"],"token":token,"channel_type":data["channel_type"]})
             return response
     # Return an error if the username or password is incorrect
     return jsonify({"error": "Invalid username or password"}), 401

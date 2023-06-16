@@ -432,8 +432,11 @@ def get_date_dif(from_time,to_time):
     diff = d2 - d1
     return [(d1 + timedelta(i)).strftime("%d.%m.%Y") for i in range(diff.days + 1)]
 
-def get_statistic_name_data():
-    res = list(db.channel.find({},{"_id":0,"channel_name":1,"channel_id":1}))
+def get_statistic_name_data(filter_):
+    f = {}
+    if filter_ != None:
+        f.update({"channel_type":filter_})
+    res = list(db.channel.find(f,{"_id":0,"channel_name":1,"channel_id":1}))
     return res
 
 def prettier_stat(stat,dep_reg,ticket_average_time):

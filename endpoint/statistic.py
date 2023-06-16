@@ -127,10 +127,14 @@ def get_statistic():
 def get_statistic_name():
     token = request.headers.get("token")
     user = validate_jwt_token(token)
+        
     if not user:
         response = jsonify({"status":0,"message":"Error"}),404
         return response
-    data = get_statistic_name_data()
+    filter_ = None
+    if user["position"] != 1:
+        filter_ = user["channel_type"]
+    data = get_statistic_name_data(filter_)
     response = jsonify({"status":1,"data":data})
     return response
 
