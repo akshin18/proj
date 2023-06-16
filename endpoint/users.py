@@ -149,6 +149,8 @@ def create_user():
         title = json_data["title"]
         position = json_data.get("position",3)
         project = json_data.get("project","")
+        if not isinstance(project,list):
+            project = [x.strip() for x in project.split(",")]
         salary = get_salary(title)
         channel_type = data["channel_type"]
         res = create_user_data(username,pwd,title,position,project,salary,channel_type)
