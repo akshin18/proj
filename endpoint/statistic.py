@@ -27,7 +27,7 @@ def get_statistic():
     if user == None:
         return jsonify({"status":0}),404
     position = user.get("position")
-    if position  == 3:
+    if position  == 3 or position  == 2:
         print(user.get("project"))
         filter = {"channel_id":{"$in":user.get("project")}}
     else:
