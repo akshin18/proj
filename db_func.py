@@ -119,7 +119,7 @@ def get_users_data(channel_type=None,position=2):
                 agentAnswerTime = []
                 for j in project:
                     stat = get_stat(j,"","")
-                    if stat != None:
+                    if stat != None and not isinstance(stat,dict):
                         agentAnswerTime.append(stat[0]["agentAnswerTime"])
                     else:
                         agentAnswerTime.append(0)
