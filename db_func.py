@@ -89,7 +89,7 @@ def get_users_data(channel_type=None,position=2):
     position = int(position)
     ex =  {"_id": 0, "updated_time": 0}
     if position > 1:
-        ex.update({"pwd":"Пусто"})
+        ex.update({"pwd":0})
     if channel_type:
         data = list(db.users.find({"position": {"$ne": 1},"channel_type":channel_type},ex))
     else:
