@@ -7,7 +7,7 @@ from flask_cors import cross_origin
 from app import app
 from config import db, PROJ_STATE
 from add_func import generate_jwt_token, validate_jwt_token,check_register_entity
-from db_func import create_user, get_users_data,update_profile_info, delete_user_data,create_user_data, get_salary, get_my_projects_data
+from db_func import create_user, get_users_data,update_profile_info, delete_user_data,create_user_data, get_salary, get_my_projects_data, get_users_by_channel_data
 
 
 
@@ -99,6 +99,7 @@ def get_progile_info():
         response = jsonify({"status":1,"data":data})
         return response
     return jsonify({"status":0}), 403
+    
 @app.route("/get_my_projects",methods=["GET"])
 def get_my_projects():
     user_id = request.args.get("user_id",None)
@@ -108,6 +109,14 @@ def get_my_projects():
     data = get_my_projects_data(user_id)
     return jsonify({"status":1,"data":data})
 
+@app.route("/get_users_by_channel",methods=["GET"])
+def get_users_by_channel():
+    channel_id = request.args.get("channel_id",None)
+    if channel_id == None:
+        return jsonify({"status":0}), 403
+
+    data = get_users_by_channel_data(channel_id)[0]
+    return jsonify({"status":1,"data":data})
 
 @app.route("/edit_profile_info",methods=["POST"])
 def edit_profile_info():

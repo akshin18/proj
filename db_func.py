@@ -495,3 +495,23 @@ def get_salary(title):
 def get_my_projects_data(user_id):
     res = db.users.find_one({"_id":ObjectId(user_id)},{"_id":0,"project":1})
     return res
+def get_users_by_channel_data(channel_id):
+    # res = list(db.users.find({"project":{"$in":[channel_id]}},{"_id":0,"project":1}))
+    res = list(db.users.aggregate([
+      {"$match":{
+          "project":{"$in":[channel_id]}
+      }},
+  {
+    "$group": {
+        "_id":"nil",
+      "users": { "$push": { "$toString": "$_id" } }
+    }
+  } ,
+  {"$project":{
+      "_id":0
+  }}
+]
+)
+    )
+    print(res)
+    return res
