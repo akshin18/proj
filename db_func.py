@@ -490,3 +490,8 @@ def get_salary(title):
     print(title)
     res = db.adm_panel.find_one({},{"_id":0,title:1})
     return res[title]
+
+
+def get_my_projects_data(user_id):
+    res = db.users.find_one({"_id":ObjectId(user_id)},{"_id":0,"project":1})
+    return res
