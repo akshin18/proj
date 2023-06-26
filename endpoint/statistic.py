@@ -144,7 +144,7 @@ def add_dep_reg():
     user = validate_jwt_token(token)
     position = user.get("position")
     data = request.get_json()
-    if position  != 1:
+    if position > 2:
         response = jsonify({"status":0,"message":"You do not have permission to edit this fucken sheet"}),401
         return response
     date = data["date"]

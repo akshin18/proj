@@ -201,7 +201,7 @@ def edit_project():
     json_data = request.get_json()
     token = request.headers["token"]
     data = validate_jwt_token(token)
-    if data and data["position"] < 3:
+    if data and data["position"] < 2:
         project = json_data.get("project","")
         username = json_data.get("username",0)
         db.users.update_one({"username":username},{"$set":{"project":project}})
