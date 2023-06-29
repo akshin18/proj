@@ -80,8 +80,8 @@ def check_username(username):
     return db.users.find_one({"username": username})
 
 
-def get_news_from_db():
-    data = list(db.news.find({}, {}))
+def get_news_from_db(limit,page):
+    data = list(db.news.find({}, {}).skip(limit*page).limit(limit))
     return data
 
 

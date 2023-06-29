@@ -38,7 +38,10 @@ def post_news():
 @app.route("/get_news", methods=["GET"])
 @cross_origin()
 def get_news():
-    news = get_news_from_db()
+    limit = request.args.get("limit",10)
+    page = request.args.get("page",0)
+    
+    news = get_news_from_db(limit,page)
     json_data_with_backslashes = json_util.dumps(news)
     json_data = json.loads(json_data_with_backslashes)[::-1]
     response = jsonify({"status": 1,"data":json_data})
