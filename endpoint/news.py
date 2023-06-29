@@ -38,8 +38,8 @@ def post_news():
 @app.route("/get_news", methods=["GET"])
 @cross_origin()
 def get_news():
-    limit = request.args.get("limit",10)
-    page = request.args.get("page",0)
+    limit = int(request.args.get("limit",10))
+    page = int(request.args.get("page",1)) - 1
     
     news = get_news_from_db(limit,page)
     json_data_with_backslashes = json_util.dumps(news)
