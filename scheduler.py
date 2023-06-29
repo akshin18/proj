@@ -21,6 +21,8 @@ class Channel:
             now = datetime.now().timestamp()
             url += f"?channelId={channel_id}&date={int(now)}"
         response = self.s.get(url,headers=self.headers)
+        if response.status_code != 200:
+            return None
         try:
             resp = response.json()
         except:
@@ -47,6 +49,8 @@ def main_schedule():
     loger_set("2")
     channel = Channel()
     data = get_channels(channel)
+    if data == None:
+        return
     channels = [x["channelId"] for x in data]
     if channels == []:
         return
