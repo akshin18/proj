@@ -119,6 +119,8 @@ def get_workers():
             channel_type = user["channel_type"]
         else:
             channel_type = None
+        if position == 0:
+            needed_postion = 2
         data = get_users_position_data(needed_postion,title=user["title"],channel_type=channel_type)
         response = jsonify({"status":1,"data":data})
         return response
