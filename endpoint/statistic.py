@@ -28,7 +28,6 @@ def get_statistic():
         return jsonify({"status":0}),404
     position = user.get("position")
     if position  == 3 or position  == 2:
-        print(user.get("project"))
         filter = {"channel_id":{"$in":user.get("project")}}
     else:
         if channel_id != None:
@@ -48,7 +47,6 @@ def get_statistic():
 
     if position != 1:
         filter.update({"channel_type":user["channel_type"]})
-    print(filter)
     datas = list(db.channel.find(filter,{"_id":0}))
     for data in datas:
         channel_id = data["channel_id"]
@@ -178,6 +176,5 @@ def change_active():
     data = request.get_json()
     active = data["active"]
     channel_id = data["channel_id"]
-    print(active)
     db.channel.update_one({"channel_id":channel_id},{"$set":{"active":active}})
     return jsonify({"status":1,"message":"ok"})

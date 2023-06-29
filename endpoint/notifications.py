@@ -18,7 +18,6 @@ def get_notifications():
     token = request.headers["token"]
     user = validate_jwt_token(token)
     user_id = user["_id"]
-    print(user_id)
     data = get_notifications_data(user_id)
     response = jsonify({"status": 1,"data":data})
     return response

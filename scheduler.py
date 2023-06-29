@@ -44,11 +44,12 @@ def check_data_appear(channel_id,channel_name,channel_type):
             })
 
 def main_schedule():
-    print("2")
     loger_set("2")
     channel = Channel()
     data = get_channels(channel)
     channels = [x["channelId"] for x in data]
+    if channels == []:
+        return
     db.channel.delete_many({"channel_id":{"$nin":channels}})
     for i in data:
         channel_id = i["channelId"]

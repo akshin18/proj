@@ -80,7 +80,6 @@ def generate_jwt_token(data):
     # Generate the JWT token
     data["_id"] = str(data["_id"])
     token = jwt.encode(data, JWT_SECRET_KEY, algorithm="HS512")
-    print(token.decode())
     return token.decode()
 
 def validate_jwt_token(token):
@@ -128,7 +127,6 @@ def generate_code():
 def get_channel_subs(channel_id):
 
     r = requests.get(f"http://146.0.78.143:5011/api/getSubscriberCount?channelId={channel_id}",headers={"ApiKey":"q8B67Lh7hj2Ou"})
-    print(r.text)
     if r.status_code == 200:
         return int(r.text)
     return 0

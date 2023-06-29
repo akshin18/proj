@@ -389,6 +389,10 @@ def get_dep_reg_data(channel_id, date):
     for i in res:
         dep = i["dep"]
         reg = i["reg"]
+        if dep == None:
+            dep = 0
+        if reg == None:
+            reg = 0
         if dep == '':
             dep = 0
         if reg == '':
@@ -411,7 +415,6 @@ def get_stat(channel_id,from_timestamp,to_stimestamp):
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}"
     else:
         url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
-    print(url)
     payload={}
     headers = {
     'ApiKey': 'q8B67Lh7hj2Ou'
@@ -487,7 +490,6 @@ def get_ticket_average(channel_id,from_timestamp,to_stimestamp):
 
 
 def get_salary(title):
-    print(title)
     res = db.adm_panel.find_one({},{"_id":0,title:1})
     return res[title]
 
@@ -513,5 +515,4 @@ def get_users_by_channel_data(channel_id):
 ]
 )
     )
-    print(res)
     return res
