@@ -78,6 +78,9 @@ def get_users():
         channel_type = data["channel_type"]
         if channel_type == "":
             channel_type = None
+        if position > 1:
+            response = jsonify({"status":0}),401
+            return response
         data = get_users_data(channel_type,position)
         response = jsonify({"status":1,"data":data})
         return response
