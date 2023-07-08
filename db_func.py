@@ -412,9 +412,9 @@ def get_timestamp(from_time,to_time):
 def get_stat(channel_id,from_timestamp,to_stimestamp):
     if from_timestamp == "" or to_stimestamp == "":
         logging.warning("SUDA")
-        url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}"
+        url = f"http://tkcrmsystem.com:5011/api/getCalendar?channelId={channel_id}"
     else:
-        url = f"http://traffkillas.kz:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
+        url = f"http://tkcrmsystem.com:5011/api/getCalendar?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
     payload={}
     headers = {
     'ApiKey': 'q8B67Lh7hj2Ou'
@@ -474,7 +474,7 @@ def get_ticket_average():
 
 def get_ticket_average(channel_id,from_timestamp,to_stimestamp):
 
-    url = f"https://api2.traffkillas.kz/api/v1/statistics/tickets/range?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
+    url = f"https://api2.tkcrmsystem.com/api/v1/statistics/tickets/range?channelId={channel_id}&start={from_timestamp}&end={to_stimestamp}"
     payload={}
     headers = {
     'ApiKey': 'q8B67Lh7hj2Ou'
